@@ -6,12 +6,25 @@
     <h1 class="display-4">To-Do App</h1>
     <p class="lead">Just another to-do app.</p>
   </div>
-
+  <form action="{{ url_for('add') }}" method="POST">
+    <div class="form-example">
+      <label for="name">Enter item title: </label>
+      <input type="text" name="itemTitle" id="itemTitle" required>
+    </div>
+  <div class="form-example">
+    <input type="submit" class="btn btn-outline-primary btn-sm" value="Post!">
+  </div>
+  </form>
+  <br/>
   <div class="row">
     <div class="col-md-12">
       <h2>Items</h2>
       <ul class="list-group mb-4">
-        <!-- List the todo items here -->
+        {% for item in items %}
+          <li>
+            <a href="{{url_for('get', id=item.id)}}">{{ item.title }}
+          </li>
+        {% endfor %}
       </ul>
     </div>
   </div>

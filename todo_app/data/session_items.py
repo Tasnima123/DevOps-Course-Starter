@@ -60,6 +60,9 @@ def save_item(item):
 
     Args:
         item: The item to save.
+    
+     Returns:
+        list: The list of saved items.
     """
     existing_items = get_items()
     updated_items = [item if item['id'] == existing_item['id'] else existing_item for existing_item in existing_items]
@@ -67,3 +70,21 @@ def save_item(item):
     session['items'] = updated_items
 
     return item
+
+def delete_item(id):
+    """
+    Deletes an existing item in the session. 
+
+    Args:
+        id: The id of the item to delete.
+    
+     Returns:
+        list: The updated list of items.
+    """
+    existing_item = get_item(id)
+    items = get_items()
+    items [:] = [d for d in items if d.get('id') != existing_item['id'] ]
+
+    session['items'] = items
+    
+    return session.get('items', _DEFAULT_ITEMS)
