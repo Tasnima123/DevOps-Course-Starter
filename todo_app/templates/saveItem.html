@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+
+{% block content %}
+  <div class="jumbotron">
+    <h1 class="display-4">To-Do App</h1>
+    <p class="lead">Just another to-do app.</p>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <h2>Item</h2>
+      <ul class="list-group mb-4">
+        <li>
+            Id: {{ item.id }}
+          </li>
+          <li>
+            Status: {{ item.status }}
+          </li>
+
+          <li>
+            Title: {{ item.title }}
+          </li>
+      </ul>
+        <a href="{{url_for('edit', id=item.id)}}">Edit</a>
+        <a href="{{url_for('delete', id=item.id)}}">Delete</a>
+    </div>
+         <a href="{{url_for('index')}}">Back to Homepage</a>
+  </div>
+{% endblock %}

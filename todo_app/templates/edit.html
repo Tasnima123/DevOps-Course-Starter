@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+
+{% block content %}
+  <div class="jumbotron">
+    <h1 class="display-4">To-Do App</h1>
+    <p class="lead">Just another to-do app.</p>
+  </div>
+  <form action="{{url_for('edit', id=item.id)}}" method="POST">
+    <div class="form-example">
+
+    <label for="name">Status: </label>
+     <input type="text" name="itemStatus" id="itemStatus" value="{{ item.status }}">
+  </div>
+      <div class="form-example">
+    <label for="name">Title: </label>
+    <input type="text" name="itemTitle" id="itemStatus" value="{{ item.title }}">
+  </div>
+  <div class="form-example">
+    <input type="submit" value="Update">
+  </div>
+</form>
+  <div class="row">
+    <div class="col-md-12">
+     <a href="{{url_for('index')}}">Back to Homepage</a>
+{% endblock %}
