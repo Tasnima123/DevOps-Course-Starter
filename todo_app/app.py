@@ -1,5 +1,5 @@
 from flask import render_template, Flask, request, redirect, url_for
-from todo_app.data.session_items import *
+from todo_app.data.session_items import get_item, get_items, save_item, delete_item, add_item
 
 from todo_app.flask_config import Config
 
@@ -7,9 +7,8 @@ app = Flask(__name__)
 
 app.config.from_object(Config)
 
-@app.route('/items', methods=["GET", "POST"])
-@app.route('/items/', methods=["GET", "POST"])
-@app.route('/', methods=["GET", "POST"])
+@app.route('/items', methods=["GET"])
+@app.route('/', methods=["GET"])
 def index():
     items = get_items()
     items = sorted(items, key=lambda x:(x.get("status")!='Not Started', items))
@@ -27,7 +26,7 @@ def edit(id):
         item["title"]=request.form.get('itemTitle')
         item["status"]=request.form.get('itemStatus')
         save_item(item)
-        return render_template('saveItem.html', item = item)
+        return redirect(url_for('get', id = item["id"]))
     return render_template('edit.html', item = item)
 
 

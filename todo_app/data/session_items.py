@@ -83,7 +83,7 @@ def delete_item(id):
     """
     existing_item = get_item(id)
     items = get_items()
-    items [:] = [d for d in items if d.get('id') != existing_item['id'] ]
+    items = [d for d in items if d.get('id') != existing_item['id'] ]
 
     session['items'] = items
     

@@ -1,5 +1,4 @@
 {% extends "layout.html" %}
-{% block title %}To-Do App{% endblock %}
 
 {% block content %}
   <div class="jumbotron">
@@ -24,5 +23,6 @@
         <a href="{{url_for('edit', id=item.id)}}">Edit</a>
         <a href="{{url_for('delete', id=item.id)}}">Delete</a>
     </div>
+         <a href="{{url_for('index')}}">Back to Homepage</a>
   </div>
 {% endblock %}
