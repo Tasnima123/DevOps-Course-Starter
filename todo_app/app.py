@@ -12,6 +12,14 @@ class Item:
         self.title = title
         self.status = status
 
+class ViewModel:
+    def __init__(self, items):
+        self._items = items
+
+    @property
+    def items(self):
+        return self._items
+
 API_KEY = os.environ.get("api_key")
 TOKEN = os.environ.get("token")
 _DEFAULT_ITEMS = []
@@ -24,7 +32,8 @@ toDo_status = "5fa74971675c2824130b06d9"
 def index():
     items = get_cards()
     items = sorted(items, key=lambda x:(x.get("status")!='To Do' or x.get("status")!='Doing', items))
-    return render_template('index.html', items = items)
+    item_view_model = ViewModel(items) 
+    render_template('index.html',view_model=item_view_model)
 
 @app.route('/items/<id>', methods=["GET", "POST"])
 def get(id):
