@@ -15,7 +15,7 @@ class Item:
 class ViewModel:
     def __init__(self, items):
         self._items = items
-
+    
     @property
     def items(self):
         return self._items
@@ -23,6 +23,7 @@ class ViewModel:
 API_KEY = os.environ.get("api_key")
 TOKEN = os.environ.get("token")
 _DEFAULT_ITEMS = []
+itemDict = []
 done_status = "5fa74971675c2824130b06db"
 doing_status = "5fa74971675c2824130b06da"
 toDo_status = "5fa74971675c2824130b06d9"
@@ -32,8 +33,8 @@ toDo_status = "5fa74971675c2824130b06d9"
 def index():
     items = get_cards()
     items = sorted(items, key=lambda x:(x.get("status")!='To Do' or x.get("status")!='Doing', items))
-    item_view_model = ViewModel(items) 
-    render_template('index.html',view_model=item_view_model)
+    item_view_model = ViewModel(items)
+    return render_template('index.html',view_model=item_view_model)
 
 @app.route('/items/<id>', methods=["GET", "POST"])
 def get(id):
@@ -63,7 +64,7 @@ def get_card(id):
 def save_card(item):
     existing_items = get_cards()
     updated_items = [item if item['id'] == existing_item['id'] else existing_item for existing_item in existing_items]
-    
+
     url = "https://api.trello.com/1/cards/"+item['id']
     headers = {"Accept": "application/json" }
     if (item['status'] == "Done"):
@@ -73,10 +74,7 @@ def save_card(item):
     else:
         idList= toDo_status
     querystring = {"key": API_KEY, "token": TOKEN, 'status': item['status'], "name": item['title'], "idList": idList}
-
     response = requests.request("PUT",url,headers=headers,params=querystring)
-
-    _DEFAULT_ITEMS = updated_items
     return item
 
 def add_card(title):
@@ -84,6 +82,7 @@ def add_card(title):
     querystring = {"name": title, "idList": toDo_status, "key": API_KEY, "token": TOKEN}
     response = requests.request("POST", url, params=querystring)
     card_id = response.json()["id"]
+    itemDict.append(Item(card_id, title, 'To Do'))
     item = Item(card_id, title, 'To Do')
     return item
 
@@ -109,6 +108,7 @@ def selectFields(data):
                 status = "To Do"
             else:
                 status = "Doing"
+            itemDict.append(Item(id, title, status))
             item = { 'id': id, 'title': title, 'status': status }
             _DEFAULT_ITEMS.append(item)
     return _DEFAULT_ITEMS
