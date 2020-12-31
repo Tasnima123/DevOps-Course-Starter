@@ -20,8 +20,38 @@ class ViewModel:
     def items(self):
         return self._items
 
+    @property
+    def statusToDo(self):
+        updated_items = []
+        for val in self._items:
+            if (val['status']== "To Do"):
+                item = { 'id': val["id"], 'title': val["title"], 'status': "To Do" }
+                updated_items.append(item)
+        return updated_items
+    
+    @property
+    def statusDoing(self):
+        updated_items2 = []
+        for val in self._items:
+            if (val['status']== "Doing"):
+                item = { 'id': val["id"], 'title': val["title"], 'status': "Doing" }
+                updated_items2.append(item)
+        return updated_items2
+
+    @property
+    def statusDone(self):
+        updated_items3 = []
+        for val in self._items:
+            if (val['status']== "Done"):
+                item = { 'id': val["id"], 'title': val["title"], 'status': "Done" }
+                updated_items3.append(item)
+        return updated_items3
+            
+
 API_KEY = os.environ.get("api_key")
 TOKEN = os.environ.get("token")
+SECRET_KEY=os.environ.get("SECRET_KEY")
+
 _DEFAULT_ITEMS = []
 itemDict = []
 done_status = "5fa74971675c2824130b06db"

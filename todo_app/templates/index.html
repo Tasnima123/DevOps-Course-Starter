@@ -16,15 +16,37 @@
   </div>
   </form>
   <br/>
+  <h2>Items</h2>
   <div class="row">
     <div class="col-md-12">
-      <h2>Items</h2>
+       <h5>To Do</h5>
       <ul class="list-group mb-4">
-       {% for item in view_model.items %}
+      {% for item in view_model.statusToDo %}
           <li>
-            <a href="{{url_for('get', id=item.id)}}">{{ item.title }}
-          </li>
-        {% endfor %}
+            <a href="{{url_for('get', id=item.id)}}">{{ item.title }}</a></li>
+      {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="row">
+  <div class="col-md-12">
+      <h5>Doing</h5>
+      <ul class="list-group mb-4">
+      {% for item in view_model.statusDoing %}
+          <li>
+            <a href="{{url_for('get', id=item.id)}}">{{ item.title }}</a></li>
+      {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="row">
+  <div class="col-md-12">
+      <h5>Done</h5>
+      <ul class="list-group mb-4">
+      {% for item in view_model.statusDone %}
+          <li>
+            <a href="{{url_for('get', id=item.id)}}">{{ item.title }}</a></li>
+      {% endfor %}
       </ul>
     </div>
   </div>
