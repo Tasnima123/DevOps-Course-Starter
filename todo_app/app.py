@@ -1,20 +1,27 @@
 from flask import Flask, redirect, url_for, render_template, request
 import requests
 import os
+import datetime
 from todo_app.flask_config import Config
 
 app = Flask(__name__)
 app.config.from_object(Config)
 
 class Item:
-    def __init__(self, id, title, status):
+    def __init__(self, id, title, status, date):
         self.id = id
         self.title = title
         self.status = status
+        self.date = date
 
 class ViewModel:
     def __init__(self, items):
         self._items = items
+        self._ToDo = items
+        self._Doing = items
+        self._Done = items
+        self._recentDone = items
+        self._olderDone = items
     
     @property
     def items(self):
@@ -25,28 +32,54 @@ class ViewModel:
         updated_items = []
         for val in self._items:
             if (val['status']== "To Do"):
-                item = { 'id': val["id"], 'title': val["title"], 'status': "To Do" }
+                item = { 'id': val["id"], 'title': val["title"], 'status': "To Do", 'DateUpdated':val["DateUpdated"] }
                 updated_items.append(item)
-        return updated_items
+        self._ToDo = updated_items
+        return self._ToDo
     
     @property
     def statusDoing(self):
         updated_items2 = []
         for val in self._items:
             if (val['status']== "Doing"):
-                item = { 'id': val["id"], 'title': val["title"], 'status': "Doing" }
+                item = { 'id': val["id"], 'title': val["title"], 'status': "Doing", 'DateUpdated':val["DateUpdated"] }
                 updated_items2.append(item)
-        return updated_items2
-
+        self._Doing = updated_items2
+        return self._Doing 
+      
     @property
-    def statusDone(self):
+    def show_all_done_items(self):
         updated_items3 = []
         for val in self._items:
             if (val['status']== "Done"):
-                item = { 'id': val["id"], 'title': val["title"], 'status': "Done" }
+                item = { 'id': val["id"], 'title': val["title"], 'status': "Done", 'DateUpdated':val["DateUpdated"] }
                 updated_items3.append(item)
-        return updated_items3
-            
+        self._Done = updated_items3
+        
+        if len(self._Done) < 5:
+            return self._Done
+        else:
+            updated_items3 = []
+            updated_items4 = []
+            present = datetime.now()
+            for val in self._items:
+                value = datetime.strptime(val['DateUpdated'], "%d/%m/%Y")
+                item = { 'id': val["id"], 'title': val["title"], 'status': "Done", 'DateUpdated':val["DateUpdated"] }
+                if (value.date() == present.date()):
+                    updated_items3.append(item)
+                else:
+                    updated_items4.append(item)
+                    self._olderDone = updated_items4
+                    self._recentDone = updated_items3
+            return self._recentDone
+
+    @property
+    def recent_done_items(self): 
+            return self._recentDone 
+    
+    @property
+    def older_done_items(self): 
+        return self._olderDone
 
 API_KEY = os.environ.get("api_key")
 TOKEN = os.environ.get("token")
@@ -62,7 +95,6 @@ toDo_status = "5fa74971675c2824130b06d9"
 @app.route('/', methods=["GET"])
 def index():
     items = get_cards()
-    items = sorted(items, key=lambda x:(x.get("status")!='To Do' or x.get("status")!='Doing', items))
     item_view_model = ViewModel(items)
     return render_template('index.html',view_model=item_view_model)
 
@@ -112,8 +144,9 @@ def add_card(title):
     querystring = {"name": title, "idList": toDo_status, "key": API_KEY, "token": TOKEN}
     response = requests.request("POST", url, params=querystring)
     card_id = response.json()["id"]
-    itemDict.append(Item(card_id, title, 'To Do'))
-    item = Item(card_id, title, 'To Do')
+    date = datetime.datetime.now()
+    itemDict.append(Item(card_id, title, 'To Do', date.date()))
+    item = Item(card_id, title, 'To Do', date.date())
     return item
 
 def get_cards():
@@ -132,14 +165,16 @@ def selectFields(data):
                 break
         else:
             id = record.get('id')
+            date = record.get('dateLastActivity')
+            date_time_obj = datetime.datetime.strptime(date, '%Y-%m-%dT%H:%M:%S.%fZ')
             if (record.get('idList')==done_status):
                 status = "Done"
             elif (record.get('idList')==toDo_status):
                 status = "To Do"
             else:
                 status = "Doing"
-            itemDict.append(Item(id, title, status))
-            item = { 'id': id, 'title': title, 'status': status }
+            itemDict.append(Item(id, title, status, date_time_obj.date()))
+            item = { 'id': id, 'title': title, 'status': status, 'DateUpdated': date_time_obj.date() }
             _DEFAULT_ITEMS.append(item)
     return _DEFAULT_ITEMS
 
