@@ -1,11 +1,18 @@
-from flask import Flask, redirect, url_for, render_template, request
+from flask import Flask, app, redirect, url_for, render_template, request
 import requests
 import os
 import datetime
 from todo_app.flask_config import Config
 
-app = Flask(__name__)
-app.config.from_object(Config)
+def create_app(): 
+    app = Flask(__name__)
+    app.config.from_object(Config)
+
+    API_KEY = os.environ.get("api_key")
+    TOKEN = os.environ.get("token")
+    SECRET_KEY=os.environ.get("SECRET_KEY")
+
+    return app
 
 class Item:
     def __init__(self, id, title, status, date):
@@ -55,7 +62,7 @@ class ViewModel:
                 item = { 'id': val["id"], 'title': val["title"], 'status': "Done", 'DateUpdated':val["DateUpdated"] }
                 updated_items3.append(item)
         self._Done = updated_items3
-        
+
         if len(self._Done) < 5:
             return self._Done
         else:
