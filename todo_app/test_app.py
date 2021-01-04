@@ -1,7 +1,29 @@
 import pytest
 from dotenv import load_dotenv, find_dotenv
-from unittest.mock import patch, Mock
+from unittest.mock import patch
+import requests
+import os
 from todo_app import app
+
+id = ""
+
+def create_board():
+       url = "https://api.trello.com/1/boards/"
+       query = {
+          'key': os.environ.get("api_key"),
+          'token': os.environ.get("token"),
+          'name': 'TestCase'
+         }
+       response = requests.request("POST",url,params=query)
+       id = response.json()["id"]
+
+def delete_board():
+      url = "https://api.trello.com/1/boards/"+id
+      query = {
+      'key': os.environ.get("api_key"),
+      'token': os.environ.get("token")
+      }
+      response = requests.request("DELETE", url,params=query)
 
 @pytest.fixture
 def client():
