@@ -4,6 +4,9 @@ import os
 import datetime
 from todo_app.flask_config import Config
 
+API_KEY = os.environ.get("api_key")
+TOKEN = os.environ.get("token")
+
 def create_app(): 
     app = Flask(__name__)
     app.config.from_object(Config)
@@ -81,9 +84,6 @@ def create_app():
         @property
         def older_done_items(self): 
             return self._olderDone
-
-    API_KEY = os.environ.get("api_key")
-    TOKEN = os.environ.get("token")
 
     _DEFAULT_ITEMS = []
     itemDict = []
@@ -177,8 +177,23 @@ def create_app():
                 item = { 'id': id, 'title': title, 'status': status, 'DateUpdated': date_time_obj.date() }
                 _DEFAULT_ITEMS.append(item)
         return _DEFAULT_ITEMS
-    
     return app
+
+def create_board():
+    url = f"https://api.trello.com/1/boards/"
+    query = {"key": API_KEY, "token": TOKEN, "name": 'TestCase'}
+    response = requests.request("POST",url,params=query)
+    data = response.json()
+    value = data.get('id')
+    return value
+
+def delete_board(id):
+    url = "https://api.trello.com/1/boards/"+id
+    query = {
+      'key': API_KEY,
+      'token': TOKEN
+      }
+    requests.request("DELETE", url,params=query)
 
 if __name__ == '__main__':
     create_app().run()
