@@ -179,21 +179,5 @@ def create_app():
         return _DEFAULT_ITEMS
     return app
 
-def create_board():
-    url = f"https://api.trello.com/1/boards/"
-    query = {"key": API_KEY, "token": TOKEN, "name": 'TestCase'}
-    response = requests.request("POST",url,params=query)
-    data = response.json()
-    value = data.get('id')
-    return value
-
-def delete_board(id):
-    url = "https://api.trello.com/1/boards/"+id
-    query = {
-      'key': API_KEY,
-      'token': TOKEN
-      }
-    requests.request("DELETE", url,params=query)
-
 if __name__ == '__main__':
     create_app().run()
