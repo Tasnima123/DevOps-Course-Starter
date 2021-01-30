@@ -87,9 +87,9 @@ def create_app():
 
     _DEFAULT_ITEMS = []
     itemDict = []
-    done_status = "5fa74971675c2824130b06db"
-    doing_status = "5fa74971675c2824130b06da"
-    toDo_status = "5fa74971675c2824130b06d9"
+    done_status = os.environ.get("done_status")
+    doing_status = os.environ.get("doing_status")
+    toDo_status = os.environ.get("toDo_status")
 
     @app.route('/items', methods=["GET", "PATCH"])
     @app.route('/', methods=["GET", "PATCH"])
