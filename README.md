@@ -55,4 +55,6 @@ Now visit [`http://localhost:5000/`](http://localhost:5000/) in your web browser
 
 We're going to be using Trello's API to fetch and save to-do tasks. In order to call their API, you need to first create a Trello account, then generate an API key and token by following the instructions at https://trello.com/app-key.
 
-Once you have both, you can update the .env file to store these 2 values. These values will be called in the app.py file as: API_KEY = os.environ.get("api_key") TOKEN = os.environ.get("token").
+Once you have both, you can update the .env file to store these 2 values. These values will be called in the app.py file as:
+API_KEY = os.environ.get("api_key")
+TOKEN = os.environ.get("token").
