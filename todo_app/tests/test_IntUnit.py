@@ -1,8 +1,13 @@
 import pytest
 from dotenv import load_dotenv, find_dotenv
 from unittest.mock import patch
+import os
+import requests
+from unittest.mock import Mock
 from threading import Thread
-from todo_app import app    
+from todo_app import app   
+
+sample_trello_lists_response = [{"id": "5fb55f9084036928139db350", "title": "Testing", "status": "To Do", "dateLastActivity": "2020-11-18T18:43:33.434Z"}]
 
 @pytest.fixture(scope='module')
 def test_app():
@@ -42,17 +47,17 @@ def test_show_all_done_items():
               updated_items3.append(item)
        assert len(updated_items3) == 1
 
-def mock_get_requests():
-       mock_get_requests = [{"id": "5fb55f9084036928139db350", "title": "Testing", "status": "To Do", "dateLastActivity": "2020-11-18T18:43:33.434Z"}]
-       return mock_get_requests
+def mock_get_lists(url):
+       TRELLO_BOARD_ID = os.environ.get("TRELLO_BOARD_ID")
+       url = "https://api.trello.com/1/boards/"+TRELLO_BOARD_ID+"/lists"
+       if url == f"https://api.trello.com/1/boards/"+TRELLO_BOARD_ID+"/lists":
+            response = Mock()
+            response.status_code = 200
+            response.json.return_value = sample_trello_lists_response 
+            return response
+       return None
 
 @patch('requests.get')
 def test_index_page(mock_get_requests, client):
-       value = mock_get_requests()
+       mock_get_requests.side_effect = mock_get_lists
        response = client.get('/')
-       for record in value:
-              title = record['title']
-              if not title:
-                     assert False
-                     break
-
