@@ -8,17 +8,6 @@ from todo_app import app
 
 sample_trello_cards_response = [{"id": "5fb55f9084036928139db350", "name": "testTitle", "status": "To Do", "dateLastActivity": "2020-11-18T18:43:33.434Z"}]
 
-@pytest.fixture(scope='module')
-def test_app():
-       file_path = find_dotenv('.env.test')
-       load_dotenv(file_path, override=True)
-       application = app.create_app()
-       thread = Thread(target=lambda: application.run(use_reloader=False))
-       thread.daemon = True
-       thread.start()
-       yield app 
-       thread.join(1)
-
 @pytest.fixture
 def client():
        file_path = find_dotenv('.env.test')
