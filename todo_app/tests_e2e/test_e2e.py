@@ -31,8 +31,6 @@ def test_task_journey(driver):
     driver.get('http://localhost:5000/')
     assert driver.title == 'To-Do App'
 
-def test_create_item(app_with_temp_board):
-
 
 
 

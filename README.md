@@ -60,4 +60,4 @@ Once you have both, you can update the .env file to store these 2 values. These 
 ## How to run tests
 
 For unit and integration tests: run "pytest tests" in the root code directory.
-For Selenium ests: run "pytest tests_e2e" in the root code directory while the project is running.
+For Selenium ests: run "pytest tests_e2e" in the root code directory. 
