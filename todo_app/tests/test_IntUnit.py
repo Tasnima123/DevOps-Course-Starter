@@ -39,7 +39,6 @@ def test_show_all_done_items():
 
 def mock_get_cards(url):
        TRELLO_BOARD_ID = os.environ.get("TRELLO_BOARD_ID")
-       # url = "https://api.trello.com/1/boards/"+TRELLO_BOARD_ID+"/cards"
        API_KEY = os.environ.get("api_key")
        TOKEN = os.environ.get("token")
        if url == f"https://api.trello.com/1/boards/"+TRELLO_BOARD_ID+"/cards?key="+API_KEY+"&token="+TOKEN:
