@@ -1,5 +1,12 @@
 import datetime
 
+class Item:
+        def __init__(self, id, title, status, date):
+            self.id = id
+            self.title = title
+            self.status = status
+            self.date = date
+
 class ViewModel:
         def __init__(self, items):
             self._items = items
