@@ -33,8 +33,8 @@ def test_createTask(test_app,driver):
     testDriver(test_app,driver)
     driver.find_element_by_id("itemTitle").send_keys("Selenium_test")
     driver.find_element_by_id("submitButton").click()
-    time.sleep(5) 
     value = driver.find_element_by_id("toDo_list")
+    time.sleep(2)
     assert "Selenium_test" in value.text
 
 def test_moveDoing(test_app,driver):   
@@ -47,6 +47,7 @@ def test_moveDoing(test_app,driver):
     driver.find_element_by_id("Update").click()
     driver.find_element_by_id("homepage").click()
     value = driver.find_element_by_id("Doing_list")
+    time.sleep(2)
     assert "Selenium_test" in value.text
 
 def test_moveDone(test_app,driver):
@@ -59,6 +60,7 @@ def test_moveDone(test_app,driver):
     driver.find_element_by_id("Update").click()
     driver.find_element_by_id("homepage").click()
     value = driver.find_element_by_id("Done_list")
+    time.sleep(2)
     assert "Selenium_test" in value.text
 
 

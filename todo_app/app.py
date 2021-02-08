@@ -187,6 +187,13 @@ def create_trello_board():
     query = {"key": API_KEY, "token": TOKEN, "name": 'TestBoard'}
     response = requests.request("POST",url,params=query)
     value = response.json()["id"]
+
+    url = "https://api.trello.com/1/boards/"+value+"/lists"
+    query = {"key": API_KEY, "token": TOKEN}
+    response = requests.request("GET",url, params=query)
+    os.environ["done_status"] = response.json()[0]["id"]
+    os.environ["doing_status"] = response.json()[1]["id"]
+    os.environ["toDo_status"] = response.json()[2]["id"]
     return value
 
 def delete_trello_board(id):
