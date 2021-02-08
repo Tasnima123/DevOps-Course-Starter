@@ -4,12 +4,13 @@ import os
 import datetime
 from todo_app.flask_config import Config
 
-API_KEY = os.environ.get("api_key")
-TOKEN = os.environ.get("token")
-
 def create_app(): 
     app = Flask(__name__)
     app.config.from_object(Config)
+
+    API_KEY = os.environ.get("api_key")
+    TOKEN = os.environ.get("token")
+    TRELLO_BOARD_ID = os.environ.get("TRELLO_BOARD_ID")
 
     class Item:
         def __init__(self, id, title, status, date):
@@ -151,7 +152,7 @@ def create_app():
 
     def get_cards():
         trello_api = requests.get(
-            "https://api.trello.com/1/boards/5fa74971675c2824130b06d8/cards?key="+API_KEY+"&token="+TOKEN)
+            "https://api.trello.com/1/boards/"+TRELLO_BOARD_ID+"/cards?key="+API_KEY+"&token="+TOKEN)
         data = trello_api.json()
         _DEFAULT_ITEMS = selectFields(data)
         return _DEFAULT_ITEMS
@@ -178,6 +179,25 @@ def create_app():
                 _DEFAULT_ITEMS.append(item)
         return _DEFAULT_ITEMS
     return app
+
+def create_trello_board():
+    API_KEY = os.environ.get("api_key")
+    TOKEN = os.environ.get("token")
+    url = f"https://api.trello.com/1/boards/"
+    query = {"key": API_KEY, "token": TOKEN, "name": 'TestCase'}
+    response = requests.request("POST",url,params=query)
+    value = response.json()["id"]
+    return value
+
+def delete_trello_board(id):
+    API_KEY = os.environ.get("api_key")
+    TOKEN = os.environ.get("token")
+    url = "https://api.trello.com/1/boards/"+id
+    query = {
+        'key': API_KEY,
+        'token': TOKEN
+        }
+    requests.request("DELETE", url,params=query)
 
 if __name__ == '__main__':
     create_app().run()
