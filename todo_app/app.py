@@ -4,13 +4,13 @@ import os
 import datetime
 from todo_app.flask_config import Config
 
-def create_app(board_id): 
+def create_app(): 
     app = Flask(__name__)
     app.config.from_object(Config)
 
     API_KEY = os.environ.get("api_key")
     TOKEN = os.environ.get("token")
-    TRELLO_BOARD_ID = board_id
+    TRELLO_BOARD_ID = os.environ.get("TRELLO_BOARD_ID")
 
     class Item:
         def __init__(self, id, title, status, date):
@@ -151,8 +151,7 @@ def create_app(board_id):
         return item
 
     def get_cards():
-        trello_api = requests.get(
-            "https://api.trello.com/1/boards/"+TRELLO_BOARD_ID+"/cards?key="+API_KEY+"&token="+TOKEN)
+        trello_api = requests.get("https://api.trello.com/1/boards/"+TRELLO_BOARD_ID+"/cards?key="+API_KEY+"&token="+TOKEN)
         data = trello_api.json()
         _DEFAULT_ITEMS = selectFields(data)
         return _DEFAULT_ITEMS

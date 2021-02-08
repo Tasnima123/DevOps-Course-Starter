@@ -3,8 +3,8 @@ from selenium import webdriver
 from threading import Thread
 from todo_app import app
 from dotenv import load_dotenv, find_dotenv   
-import os
 import time
+import os
 from todo_app import app
 
 @pytest.fixture(scope='module')
@@ -12,11 +12,12 @@ def test_app():
        file_path = find_dotenv('.env')
        load_dotenv(file_path, override=True)
        board_id = app.create_trello_board()
-       application = app.create_app(board_id)
+       os.environ["TRELLO_BOARD_ID"] = board_id
+       application = app.create_app()
        thread = Thread(target=lambda: application.run(use_reloader=False))
        thread.daemon = True
        thread.start()
-       yield app 
+       yield app
        thread.join(1)
        app.delete_trello_board(board_id)
 
