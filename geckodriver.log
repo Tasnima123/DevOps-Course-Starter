@@ -16,3 +16,35 @@ console.warn: SearchSettings: "get: No settings file exists, new profile?" (new 
 
 ###!!! [Parent][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
 
+1612804270683	geckodriver	INFO	Listening on 127.0.0.1:58713
+1612804271691	mozrunner::runner	INFO	Running command: "/Applications/Firefox.app/Contents/MacOS/firefox-bin" "--marionette" "-foreground" "-no-remote" "-profile" "/var/folders/mg/85b2w2tx2cq1dq0zs46k9dnw0000gn/T/rust_mozprofileACCkzE"
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new Error("", "(unknown module)"))
+1612804276845	Marionette	INFO	Listening on port 58720
+1612804276968	Marionette	WARN	TLS certificate errors will be ignored for this session
+1612804279650	Marionette	INFO	Stopped listening on port 58720
+
+###!!! [Parent][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
+
+1612805308693	geckodriver	INFO	Listening on 127.0.0.1:59509
+1612805308708	mozrunner::runner	INFO	Running command: "/Applications/Firefox.app/Contents/MacOS/firefox-bin" "--marionette" "-foreground" "-no-remote" "-profile" "/var/folders/mg/85b2w2tx2cq1dq0zs46k9dnw0000gn/T/rust_mozprofileEUmGiG"
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new Error("", "(unknown module)"))
+1612805312902	Marionette	INFO	Listening on port 59514
+1612805313000	Marionette	WARN	TLS certificate errors will be ignored for this session
+1612805322895	Marionette	INFO	Stopped listening on port 59514
+
+###!!! [Parent][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
+
+1612806600827	geckodriver	INFO	Listening on 127.0.0.1:60323
+1612806600843	mozrunner::runner	INFO	Running command: "/Applications/Firefox.app/Contents/MacOS/firefox-bin" "--marionette" "-foreground" "-no-remote" "-profile" "/var/folders/mg/85b2w2tx2cq1dq0zs46k9dnw0000gn/T/rust_mozprofileiixyOJ"
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new Error("", "(unknown module)"))
+1612806605586	Marionette	INFO	Listening on port 60328
+1612806605945	Marionette	WARN	TLS certificate errors will be ignored for this session
+1612806608871	Marionette	WARN	TimedPromise timed out after 500 ms: stacktrace:
+TimedPromise/<@chrome://marionette/content/sync.js:235:19
+TimedPromise@chrome://marionette/content/sync.js:220:10
+interaction.flushEventLoop@chrome://marionette/content/interaction.js:418:10
+webdriverClickElement@chrome://marionette/content/interaction.js:179:31
+1612806616429	Marionette	INFO	Stopped listening on port 60328
+
+###!!! [Parent][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
+

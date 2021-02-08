@@ -1,19 +1,18 @@
 import pytest
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
 from threading import Thread
 from todo_app import app
 from dotenv import load_dotenv, find_dotenv   
 import os
+import time
 from todo_app import app
 
 @pytest.fixture(scope='module')
 def test_app():
        file_path = find_dotenv('.env')
        load_dotenv(file_path, override=True)
-       board_id = os.environ['TRELLO_BOARD_ID']
        board_id = app.create_trello_board()
-       application = app.create_app()
+       application = app.create_app(board_id)
        thread = Thread(target=lambda: application.run(use_reloader=False))
        thread.daemon = True
        thread.start()
@@ -25,17 +24,21 @@ def test_app():
 def driver():
     with webdriver.Firefox() as driver:
         yield driver
-        driver.close()
 
-def test_task_journey(test_app,driver):
+def testDriver(test_app,driver):
     driver.get('http://127.0.0.1:5000/')
     assert driver.title == 'To-Do App'
+    
+def test_createTask(test_app,driver):
+    testDriver(test_app,driver)
     driver.find_element_by_id("itemTitle").send_keys("Selenium_test")
     driver.find_element_by_id("submitButton").click()
+    time.sleep(5) 
     value = driver.find_element_by_id("toDo_list")
     assert "Selenium_test" in value.text
 
 def test_moveDoing(test_app,driver):   
+    testDriver(test_app,driver)
     driver.find_element_by_link_text('Selenium_test').click()
     driver.find_element_by_id("editButton").click()
     input = driver.find_element_by_id("itemStatus")
@@ -47,6 +50,7 @@ def test_moveDoing(test_app,driver):
     assert "Selenium_test" in value.text
 
 def test_moveDone(test_app,driver):
+    testDriver(test_app,driver)
     driver.find_element_by_link_text('Selenium_test').click()
     driver.find_element_by_id("editButton").click()
     input = driver.find_element_by_id("itemStatus")
