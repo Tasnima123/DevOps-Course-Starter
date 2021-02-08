@@ -22,14 +22,30 @@ def app_with_temp_board():
        thread.join(1)
        app.delete_trello_board(board_id)
 
+@pytest.fixture
+def client():
+    file_path = find_dotenv('.env')
+    load_dotenv(file_path, override=True)
+    test_app = app.create_app()
+    with test_app.test_client() as client:
+        yield client
+
 @pytest.fixture(scope="module")
 def driver():
     with webdriver.Firefox() as driver:
         yield driver
 
-def test_task_journey(driver):
+def test_task_journey(driver, client):
     driver.get('http://localhost:5000/')
     assert driver.title == 'To-Do App'
+
+
+
+
+
+    
+
+
 
 
 
