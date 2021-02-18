@@ -54,3 +54,4 @@ def test_index_page(mock_get_requests, client):
        mock_get_requests.side_effect = mock_get_cards
        response = client.get('/')
        assert "testTitle" in response.data.decode() 
+

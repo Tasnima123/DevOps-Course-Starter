@@ -59,6 +59,12 @@ Once you have both, you can update the .env file to store these 2 values. These 
 
 ## How to run tests
 
-For unit and integration tests: run "pytest tests" in the root code directory.
+For Selenium tests, Download Firefox beforehand and you will need to download the matching version of the Gecko Driver executable and place it in the root of your project - the selenium driver just uses this under the hood.
 
+If in poetry env:
+For unit and integration tests: run "pytest tests" in the root code directory. 
 For Selenium tests: run "pytest tests_e2e" in the root code directory. 
+
+If in poetry env: 
+For unit and integration tests: run "poetry pytest tests" in the root code directory. 
+For Selenium tests: run "poetry pytest tests_e2e" in the root code directory. 
