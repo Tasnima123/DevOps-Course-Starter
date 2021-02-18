@@ -13,7 +13,6 @@ def test_app():
        file_path = find_dotenv('.env')
        load_dotenv(file_path, override=True)
        board_id = create_trello_board()
-       os.environ["TRELLO_BOARD_ID"] = board_id
        application = app.create_app()
        thread = Thread(target=lambda: application.run(use_reloader=False))
        thread.daemon = True
@@ -72,13 +71,13 @@ def create_trello_board():
     query = {"key": API_KEY, "token": TOKEN, "name": 'TestBoard'}
     response = requests.request("POST",url,params=query)
     value = response.json()["id"]
-
     url = "https://api.trello.com/1/boards/"+value+"/lists"
     query = {"key": API_KEY, "token": TOKEN}
     response = requests.request("GET",url, params=query)
     os.environ["done_status"] = response.json()[0]["id"]
     os.environ["doing_status"] = response.json()[1]["id"]
     os.environ["toDo_status"] = response.json()[2]["id"]
+    os.environ["TRELLO_BOARD_ID"] = value
     return value
 
 def delete_trello_board(id):
