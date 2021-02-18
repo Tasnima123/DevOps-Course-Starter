@@ -106,31 +106,5 @@ def create_app():
         return _DEFAULT_ITEMS
     return app
 
-def create_trello_board():
-    API_KEY = os.environ.get("api_key")
-    TOKEN = os.environ.get("token")
-    url = f"https://api.trello.com/1/boards/"
-    query = {"key": API_KEY, "token": TOKEN, "name": 'TestBoard'}
-    response = requests.request("POST",url,params=query)
-    value = response.json()["id"]
-
-    url = "https://api.trello.com/1/boards/"+value+"/lists"
-    query = {"key": API_KEY, "token": TOKEN}
-    response = requests.request("GET",url, params=query)
-    os.environ["done_status"] = response.json()[0]["id"]
-    os.environ["doing_status"] = response.json()[1]["id"]
-    os.environ["toDo_status"] = response.json()[2]["id"]
-    return value
-
-def delete_trello_board(id):
-    API_KEY = os.environ.get("api_key")
-    TOKEN = os.environ.get("token")
-    url = "https://api.trello.com/1/boards/"+id
-    query = {
-        'key': API_KEY,
-        'token': TOKEN
-        }
-    requests.request("DELETE", url,params=query)
-
 if __name__ == '__main__':
     create_app().run()

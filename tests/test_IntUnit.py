@@ -5,6 +5,7 @@ import os
 from unittest.mock import Mock
 from threading import Thread
 from todo_app import app   
+from todo_app.classModels import ViewModel
 
 sample_trello_cards_response = [{"id": "5fb55f9084036928139db350", "name": "testTitle", "status": "To Do", "dateLastActivity": "2020-11-18T18:43:33.434Z"}]
 
@@ -16,26 +17,17 @@ def client():
        with test_app.test_client() as client:
           yield client
 
-def test_statusToDo():
-       updated_items = []
-       item = { 'id': "testID", 'title': "testTitle", 'status': "To Do", 'DateUpdated':"testDate"}
-       if (item['status']== "To Do"):
-              updated_items.append(item)
-       assert len(updated_items) == 1
-
-def test_statusDoing():
-       updated_items2 = []
-       item = { 'id': "testID", 'title': "testTitle", 'status': "Doing", 'DateUpdated':"testDate"}
-       if (item['status']== "Doing"):
-              updated_items2.append(item)
-       assert len(updated_items2) == 1
-
-def test_show_all_done_items():
-       updated_items3 = []
-       item = { 'id': "testID", 'title': "testTitle", 'status': "Done", 'DateUpdated':"testDate"}
-       if (item['status']== "Done"):
-              updated_items3.append(item)
-       assert len(updated_items3) == 1
+def test_viewModel():
+       item = [{'id':"testID", 'title':"testTitle1", 'status':"To Do", 'DateUpdated':"testDate"},
+       {'id': "testID", 'title': "testTitle2", 'status': "Doing", 'DateUpdated':"testDate"},
+       {'id': "testID", 'title': "testTitle3", 'status': "Done", 'DateUpdated':"testDate"}]
+       view_model = ViewModel(item)
+       view_model.statusToDo
+       view_model.statusDoing
+       view_model.show_all_done_items
+       assert len(view_model._ToDo) == 1
+       assert len(view_model._Doing) == 1
+       assert len(view_model._Done) == 1
 
 def mock_get_cards(url):
        TRELLO_BOARD_ID = os.environ.get("TRELLO_BOARD_ID")

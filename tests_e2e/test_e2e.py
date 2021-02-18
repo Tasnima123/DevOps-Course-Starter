@@ -6,12 +6,13 @@ from dotenv import load_dotenv, find_dotenv
 import time
 import os
 from todo_app import app
+import requests
 
 @pytest.fixture(scope='module')
 def test_app():
        file_path = find_dotenv('.env')
        load_dotenv(file_path, override=True)
-       board_id = app.create_trello_board()
+       board_id = create_trello_board()
        os.environ["TRELLO_BOARD_ID"] = board_id
        application = app.create_app()
        thread = Thread(target=lambda: application.run(use_reloader=False))
@@ -19,7 +20,7 @@ def test_app():
        thread.start()
        yield app
        thread.join(1)
-       app.delete_trello_board(board_id)
+       delete_trello_board(board_id)
 
 @pytest.fixture(scope="module")
 def driver():
@@ -64,6 +65,31 @@ def test_moveDone(test_app,driver):
     time.sleep(2)
     assert "Selenium_test" in value.text
 
+def create_trello_board():
+    API_KEY = os.environ.get("api_key")
+    TOKEN = os.environ.get("token")
+    url = f"https://api.trello.com/1/boards/"
+    query = {"key": API_KEY, "token": TOKEN, "name": 'TestBoard'}
+    response = requests.request("POST",url,params=query)
+    value = response.json()["id"]
+
+    url = "https://api.trello.com/1/boards/"+value+"/lists"
+    query = {"key": API_KEY, "token": TOKEN}
+    response = requests.request("GET",url, params=query)
+    os.environ["done_status"] = response.json()[0]["id"]
+    os.environ["doing_status"] = response.json()[1]["id"]
+    os.environ["toDo_status"] = response.json()[2]["id"]
+    return value
+
+def delete_trello_board(id):
+    API_KEY = os.environ.get("api_key")
+    TOKEN = os.environ.get("token")
+    url = "https://api.trello.com/1/boards/"+id
+    query = {
+        'key': API_KEY,
+        'token': TOKEN
+        }
+    requests.request("DELETE", url,params=query)
 
 
 

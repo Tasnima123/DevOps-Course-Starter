@@ -10,11 +10,11 @@ class Item:
 class ViewModel:
         def __init__(self, items):
             self._items = items
-            self._ToDo = items
-            self._Doing = items
-            self._Done = items
-            self._recentDone = items
-            self._olderDone = items
+            self._ToDo = ""
+            self._Doing = ""
+            self._Done = ""
+            self._recentDone = ""
+            self._olderDone = ""
         
         @property
         def items(self):
@@ -23,9 +23,9 @@ class ViewModel:
         @property
         def statusToDo(self):
             updated_items = []
-            for val in self._items:
-                if (val['status']== "To Do"):
-                    item = { 'id': val["id"], 'title': val["title"], 'status': "To Do", 'DateUpdated':val["DateUpdated"] }
+            for v in self._items:
+                if (v['status']== "To Do"):
+                    item = {'id': v["id"], 'title': v["title"], 'status': "To Do", 'DateUpdated':v["DateUpdated"] }
                     updated_items.append(item)
             self._ToDo = updated_items
             return self._ToDo
@@ -55,7 +55,7 @@ class ViewModel:
                 updated_items3 = []
                 updated_items4 = []
                 present = datetime.now()
-                for val in self._items:
+                for val in self._Done:
                     value = datetime.strptime(val['DateUpdated'], "%d/%m/%Y")
                     item = { 'id': val["id"], 'title': val["title"], 'status': "Done", 'DateUpdated':val["DateUpdated"] }
                     if (value.date() == present.date()):
