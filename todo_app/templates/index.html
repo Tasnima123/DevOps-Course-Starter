@@ -12,20 +12,48 @@
       <input type="text" name="itemTitle" id="itemTitle" required>
     </div>
   <div class="form-example">
-    <input type="submit" class="btn btn-outline-primary btn-sm" value="Post!">
+    <input type="submit" id="submitButton" class="btn btn-outline-primary btn-sm" value="Post!">
   </div>
   </form>
   <br/>
+  <h2>Items</h2>
   <div class="row">
     <div class="col-md-12">
-      <h2>Items</h2>
-      <ul class="list-group mb-4">
-       {% for item in items %}
-          <li>
-            <a href="{{url_for('get', id=item.id)}}">{{ item.title }}
-          </li>
-        {% endfor %}
+       <h5>To Do</h5>
+      <ul class="list-group mb-4" id="toDo_list">
+      {% for item in view_model.statusToDo %}
+          <li><a href="{{url_for('get', id=item.id)}}">{{ item.title }}</a></li>
+      {% endfor %}
       </ul>
+    </div>
+  </div>
+  <div class="row">
+  <div class="col-md-12">
+      <h5>Doing</h5>
+      <ul class="list-group mb-4" id="Doing_list">
+      {% for item in view_model.statusDoing %}
+          <li><a href="{{url_for('get', id=item.id)}}">{{ item.title }}</a></li>
+      {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="row">
+  <div class="col-md-12">
+      <h5>Done</h5>
+     <ul class="list-group mb-4" id="Done_list">
+      {% for item in view_model.show_all_done_items %}
+          <li><a href="{{url_for('get', id=item.id)}}">{{ item.title }}</a></li>
+      {% endfor %}
+      </ul>
+      <details>
+      <summary>Older Completed Tasks</summary>
+       <ul class="list-group mb-4">
+      {% for item in view_model.older_done_items %}
+          <li><a href="{{url_for('get', id=item.id)}}">{{ item.title }}</a></li>
+      {% endfor %}
+      </ul>
+    </details>
+    <br/>
     </div>
   </div>
 {% endblock %}

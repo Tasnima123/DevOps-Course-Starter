@@ -1,3 +1,4 @@
 {
-    "python.pythonPath": "/Users/tasnimamiah/.pyenv/versions/3.8.5/bin/python"
+    "python.pythonPath": "env/bin/python",
+    "python.formatting.provider": "autopep8"
 }
