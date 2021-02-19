@@ -25,9 +25,9 @@ def test_viewModel():
        view_model.statusToDo
        view_model.statusDoing
        view_model.show_all_done_items
-       assert len(view_model._ToDo) == 1
-       assert len(view_model._Doing) == 1
-       assert len(view_model._Done) == 1
+       assert len(view_model.statusToDo) == 1
+       assert len(view_model.statusDoing) == 1
+       assert len(view_model.show_all_done_items) == 1
 
 def mock_get_cards(url):
        TRELLO_BOARD_ID = os.environ.get("TRELLO_BOARD_ID")
