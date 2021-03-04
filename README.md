@@ -74,22 +74,22 @@ Vagrant encapsulates development environment in a single configuration file, mak
 between developers and launch without having to worry about Python environments and dependencies.
 
 Download: 
-*Hypervisor - Vagrant requires a hypervisor installed. We recommend [VirtualBox](https://www.virtualbox.org/).
-*Vagrant - Download and install vagrant from the [official website](https://www.vagrantup.com/). You can check it's installed correctly by running the `vagrant` command in your terminal.
+* Hypervisor - Vagrant requires a hypervisor installed. We recommend [VirtualBox](https://www.virtualbox.org/).
+* Vagrant - Download and install vagrant from the [official website](https://www.vagrantup.com/). You can check it's installed correctly by running the `vagrant` command in your terminal.
 
 ### Starting the app on the VM
 
-*`vagrant up` - Starts your VM, creating and provisioning it automatically if it is required. This command will automatically run the app on the browser.
+* `vagrant up` - Starts your VM, creating and provisioning it automatically if it is required. This command will automatically run the app on the browser.
 
 You can then visit http://localhost:5000/ in your web browser to view the app.
 
-*`vagrant ssh` - explore this VM using the bash shell. 
+* `vagrant ssh` - explore this VM using the bash shell. 
 
 ### Other useful commands
 
-*`vagrant provision` - Runs any VM provisioning steps specified in the Vagrantfile. Provisioning steps are one-off operations that adjust the system provided by the box.
-*`vagrant suspend` - Suspends any running VM. The VM will be restarted on the next vagrant up command.
-*`vagrant destroy` - Destroys the VM. It will be fully recreated the next time you run vagrant up.
+* `vagrant provision` - Runs any VM provisioning steps specified in the Vagrantfile. Provisioning steps are one-off operations that adjust the system provided by the box.
+* `vagrant suspend` - Suspends any running VM. The VM will be restarted on the next vagrant up command.
+* `vagrant destroy` - Destroys the VM. It will be fully recreated the next time you run vagrant up.
 
 ## Run tests
 
@@ -100,5 +100,5 @@ If in poetry env:
 *For Selenium tests: run `pytest tests_e2e`
 
 If not in poetry env: 
-*For unit and integration tests: run `poetry run pytest tests`
-*For Selenium tests: run `poetry run pytest tests_e2e`
+* For unit and integration tests: run `poetry run pytest tests`
+* For Selenium tests: run `poetry run pytest tests_e2e`
