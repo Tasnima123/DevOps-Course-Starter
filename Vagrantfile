@@ -26,6 +26,7 @@ Vagrant.configure("2") do |config|
     trigger.info = "Running the TODO app setup script"
     trigger.run_remote = {privileged: false, inline: "
     curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
+    source $HOME/.poetry/env
     cd /vagrant
     poetry install
     nohup poetry run flask run --host=0.0.0.0 > logs.txt 2>&1 &
