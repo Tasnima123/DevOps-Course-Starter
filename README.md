@@ -34,12 +34,13 @@ $ cp .env.template .env  # (first time only)
 
 The `.env` file is used by flask to set environment variables when running `flask run`. This enables things like development mode (which also enables features like hot reloading when you make a file change). There's also a [SECRET_KEY](https://flask.palletsprojects.com/en/1.1.x/config/#SECRET_KEY) variable which is used to encrypt the flask session cookie.\'
 
-`token` = token key
-`api_key` = api key
-`done_status` = done status id
-`doing_status` = doing status id
-`toDo_status` = To Do status id
-`TRELLO_BOARD_ID` = board id
+Other values that we need for .env: 
+* `token` = token key
+* `api_key` = api key
+* `done_status` = done status id
+* `doing_status` = doing status id
+* `toDo_status` = To Do status id
+* `TRELLO_BOARD_ID` = board id
 
 We're going to be using Trello's API to fetch and save to-do tasks. In order to call their API, you need to first create a Trello account, then generate an API key and token by following the instructions at https://trello.com/app-key.
 
