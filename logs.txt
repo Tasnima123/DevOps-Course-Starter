@@ -1,0 +1,27 @@
+ * Serving Flask app "todo_app/app" (lazy loading)
+ * Environment: development
+ * Debug mode: on
+Traceback (most recent call last):
+  File "/vagrant/.venv/bin/flask", line 8, in <module>
+    sys.exit(main())
+  File "/vagrant/.venv/10.0.2.2 - - [04/Mar/2021 02:19:27] "[37mGET / HTTP/1.1[0m" 200 -
+10.0.2.2 - - [04/Mar/2021 02:19:28] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+File "/vagrant/.venv/lib/python3.8/site-packages/flask/cli.py", line 586, in main
+    return super(FlaskGroup, self).main(*args, **kwargs)
+  File "/vagrant/.venv/lib/python3.8/site-packages/click/core.py", line 782, in main
+    rv = self.invoke(ctx)
+  File "/vagrant/.venv/lib/python3.8/site-packages/click/core.py", line 1259, in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+  File "/vagrant/.venv/lib/python3.8/site-packages/click/core.py", line 1066, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/vagrant/.venv/lib/python3.8/site-packages/click/core.py", line 610, in invoke
+    return callback(*args, **kwargs)
+  File "/vagrant/.venv/lib/python3.8/site-packages/click/decorators.py", line 73, in new_func
+    return ctx.invoke(f, obj, *args, **kwargs)
+  File "/vagrant/.venv/lib/python3.8/site-packages/click/core.py", line 610, in invoke
+    return callback(*args, **kwargs)
+  File "/vagrant/.venv/lib/python3.8/site-packages/flask/cli.py", line 852, in run_command
+    run_simple(
+  File "/vagrant/.venv/lib/python3.8/site-packages/werkzeug/serving.py", line 1030, in run_simple
+    s.bind(server_address)
+OSError: [Errno 98] Address already in use
