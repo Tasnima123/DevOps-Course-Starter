@@ -24,6 +24,8 @@ The project uses a virtual environment to isolate package dependencies. To creat
 $ poetry install
 ```
 
+## Setup and Evironment variables
+
 You'll also need to clone a new `.env` file from the `.env.tempalate` to store local configuration options. This is a one-time operation on first setup:
 
 ```bash
@@ -31,6 +33,20 @@ $ cp .env.template .env  # (first time only)
 ```
 
 The `.env` file is used by flask to set environment variables when running `flask run`. This enables things like development mode (which also enables features like hot reloading when you make a file change). There's also a [SECRET_KEY](https://flask.palletsprojects.com/en/1.1.x/config/#SECRET_KEY) variable which is used to encrypt the flask session cookie.\'
+
+Other values that we need for .env: 
+* `token` = token key
+* `api_key` = api key
+* `done_status` = done status id
+* `doing_status` = doing status id
+* `toDo_status` = To Do status id
+* `TRELLO_BOARD_ID` = board id
+
+We're going to be using Trello's API to fetch and save to-do tasks. In order to call their API, you need to first create a Trello account, then generate an API key and token by following the instructions at https://trello.com/app-key.
+
+Once you have both, you can update the .env file to store these 2 values. These values will be called in the app.py file as: API_KEY = os.environ.get("api_key") TOKEN = os.environ.get("token").
+
+The other details can also be found from the TRELLO API.
 
 ## Running the App
 
@@ -51,24 +67,39 @@ You should see output similar to the following:
 ```
 Now visit [`http://localhost:5000/`](http://localhost:5000/) in your web browser to view the app.
 
-## Setup Requirements
 
-We're going to be using Trello's API to fetch and save to-do tasks. In order to call their API, you need to first create a Trello account, then generate an API key and token by following the instructions at https://trello.com/app-key.
+## Virtual Machine(VM) using Vagrant
 
-Once you have both, you can update the .env file to store these 2 values. These values will be called in the app.py file as: API_KEY = os.environ.get("api_key") TOKEN = os.environ.get("token").
+The app can be ran in a virtual machine using Vagrant. 
+Vagrant encapsulates development environment in a single configuration file, making it easy to share
+between developers and launch without having to worry about Python environments and dependencies.
 
-## How to run tests
+Download: 
+* Hypervisor - Vagrant requires a hypervisor installed. We recommend [VirtualBox](https://www.virtualbox.org/).
+* Vagrant - Download and install vagrant from the [official website](https://www.vagrantup.com/). You can check it's installed correctly by running the `vagrant` command in your terminal.
+
+### Starting the app on the VM
+
+* `vagrant up` - Starts your VM, creating and provisioning it automatically if it is required. This command will automatically run the app on the browser.
+
+You can then visit http://localhost:5000/ in your web browser to view the app.
+
+* `vagrant ssh` - explore this VM using the bash shell. 
+
+### Other useful commands
+
+* `vagrant provision` - Runs any VM provisioning steps specified in the Vagrantfile. Provisioning steps are one-off operations that adjust the system provided by the box.
+* `vagrant suspend` - Suspends any running VM. The VM will be restarted on the next vagrant up command.
+* `vagrant destroy` - Destroys the VM. It will be fully recreated the next time you run vagrant up.
+
+## Run tests
 
 For Selenium tests, Download Firefox beforehand and you will need to download the matching version of the Gecko Driver executable and place it in the root of your project - the selenium driver just uses this under the hood.
 
 If in poetry env:
-
-For unit and integration tests: run "pytest tests"
-
-For Selenium tests: run "pytest tests_e2e"
+* For unit and integration tests: run `pytest tests`
+* For Selenium tests: run `pytest tests_e2e`
 
 If not in poetry env: 
-
-For unit and integration tests: run "poetry run pytest tests"
-
-For Selenium tests: run "poetry run pytest tests_e2e"
+* For unit and integration tests: run `poetry run pytest tests`
+* For Selenium tests: run `poetry run pytest tests_e2e`
