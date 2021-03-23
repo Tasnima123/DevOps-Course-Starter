@@ -1,0 +1,9 @@
+.env
+.env.template
+.env.test
+
+Vagrantfile
+
+logs.txt
+
+.git
