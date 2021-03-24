@@ -83,10 +83,9 @@ Download:
 ### Starting the app on the VM
 
 * `vagrant up` - Starts your VM, creating and provisioning it automatically if it is required. This command will automatically run the app on the browser.
+* `vagrant ssh` - explore this VM using the bash shell. 
 
 You can then visit http://localhost:5000/ in your web browser to view the app.
-
-* `vagrant ssh` - explore this VM using the bash shell. 
 
 #### Other useful commands
 
@@ -115,7 +114,6 @@ or the the following for prod:
 ```bash
 $ docker build --target production --tag todo-app:prod .
 ```
-
 
 You can then start the dev container by running:
 ```bash
