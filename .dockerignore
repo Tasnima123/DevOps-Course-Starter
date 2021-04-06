@@ -1,4 +1,5 @@
 .env
+.venv
 .env.template
 .env.test
 
@@ -7,3 +8,6 @@ Vagrantfile
 logs.txt
 
 .git
+
+.vagrant
+

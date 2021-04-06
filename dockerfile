@@ -1,7 +1,6 @@
 FROM python:3.9-rc-buster as base
 RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python - -y
 ENV PATH="/root/.poetry/bin:$PATH"
-RUN which poetry
 WORKDIR /todo_app
 COPY pyproject.toml poetry.lock ./
 RUN poetry install
