@@ -50,7 +50,7 @@ def test_moveDoing(test_app,driver):
     value = driver.find_element_by_id("Doing_list")
     time.sleep(2)
     assert "Selenium_test" in value.text
-
+    
 def test_moveDone(test_app,driver):
     testDriver(test_app,driver)
     driver.find_element_by_link_text('Selenium_test').click()
