@@ -1,3 +1,4 @@
+language: generic
 script:
-- echo "hello world"
+- echo "hello"
 - docker build --target test --tag my-test-image . 
