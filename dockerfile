@@ -11,4 +11,10 @@ ENTRYPOINT [ "poetry" , "run" ]
 CMD [ "gunicorn","--bind", "0.0.0.0:5000", "todo_app.app:create_app()" ]
 FROM base as development
 ENTRYPOINT [ "poetry" , "run" ]
-CMD [ "flask","run", "--host=0.0.0.0" ]
+CMD ["flask","run", "--host=0.0.0.0"]
+FROM base as test
+WORKDIR /todo_app/tests
+COPY todo_app ./todo_app
+COPY tests ./tests
+RUN poetry install
+ENTRYPOINT ["poetry", "run", "pytest"]

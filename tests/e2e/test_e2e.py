@@ -5,7 +5,6 @@ from todo_app import app
 from dotenv import load_dotenv, find_dotenv   
 import time
 import os
-from todo_app import app
 import requests
 
 @pytest.fixture(scope='module')

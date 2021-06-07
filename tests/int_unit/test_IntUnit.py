@@ -1,3 +1,4 @@
+import todo_app
 import pytest
 from dotenv import load_dotenv, find_dotenv
 from unittest.mock import patch
