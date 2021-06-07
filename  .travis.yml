@@ -1,4 +1,3 @@
 script:
 - echo "hello world"
-- docker run --env-file .env my-test-image tests/e2e
-- docker run --env-file .env.test my-test-image tests/int_unit
+- docker build --target test --tag my-test-image . 
