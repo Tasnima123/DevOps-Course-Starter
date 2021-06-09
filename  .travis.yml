@@ -1,4 +1,0 @@
-language: generic
-script:
-- echo "hello"
-- docker build --target test --tag my-test-image . 
