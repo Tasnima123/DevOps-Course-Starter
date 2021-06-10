@@ -119,22 +119,19 @@ or the the following for test:
 ```bash
 $ docker build --target test --tag my-test-image .
 ```
-
+<br />
 You can then start the dev container by running:
 ```bash
 $ docker run --env-file .env -p 5000:5000 -v $(pwd)/todo_app:/todo_app/todo_app  todo-app:dev
 ```
-
 or you can start the prod container by running:
 ```bash
 $ docker run --env-file .env -p 5000:5000 todo-app:prod
 ```
-
 or you can start the test container by running:
 ```bash
 $ docker run --env-file .env my-test-image tests/e2e
 ```
-
 ## Run Tests
 
 For Selenium tests, Download Firefox beforehand and you will need to download the matching version of the Gecko Driver executable and place it in the root of your project - the selenium driver just uses this under the hood.
