@@ -1,4 +1,11 @@
 language: generic
-script:
-- echo "hello"
+services:
+- docker
+before_install:
 - docker build --target test --tag my-test-image .
+script:
+- echo "hello world"
+- docker run -e FLASK_APP=todo_app/app -e FLASK_ENV=development -e FLASK_SKIP_DOTENV=True -e token="4c82ed8e16b482daf8c417cc0f1187bf943dc7d3dcbd212d08b39b51a5c58847" -e api_key="38562d78c91237d032fc48f4301cab52" -e TRELLO_BOARD_ID="34" my-test-image tests/int_unit
+env:
+  global:
+  - secure:
