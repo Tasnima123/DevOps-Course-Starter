@@ -8,7 +8,7 @@ script:
 - docker run -e FLASK_APP=todo_app/app -e FLASK_ENV=development -e FLASK_SKIP_DOTENV=True
   -e token="4c82ed8e16b482daf8c417cc0f1187bf943dc7d3dcbd212d08b39b51a5c58847" -e api_key="38562d78c91237d032fc48f4301cab52"
   -e TRELLO_BOARD_ID="34" my-test-image tests/int_unit
-- docker run -e FLASK_APP=todo_app/app -e FLASK_ENV=development -e FLASK_SKIP_DOtENV=True -e token=$token -e api_key=$api_key -e TRELLO_BOARD_ID=$TRELLO_BOARD_ID my-test-image tests/e2e
+- docker run -e FLASK_APP=todo_app/app -e FLASK_ENV=development -e FLASK_SKIP_DOTENV=True -e token=$token -e api_key=$api_key -e TRELLO_BOARD_ID=$TRELLO_BOARD_ID my-test-image tests/e2e
 env:
   global:
   - secure: fIGxn0ogc+Saxz527pWRPKN26JYEPPHa6ssj7IZdlM+cdpQyrFZUls7RTojVJ5UMDYjj8BMeUUk74o8oUNEl5j2b0UvCi3H8b0iZUpyCSE0NgF4l2PFXymzkf6ynUiyilH4fcK+p8D2EUgeO+5Ml9MBxBkgz80cImK5U5saAxSnFzHBvV0Kdl9ORK4crXaZKO1WyuXCD0dczFy4UtuiPpCazp8pMDGHyFv3U0HuY244mK0CWUx7o+0OpBwT59X9ZYNNbCNrGxNETQJLeQ6pAxd3dwXospBx8JDAqimqDjvArFo8YOmdYkMTLaTZkFyGeT5A8IaBhSqRSQ5FppA68i3eBXxNRoUXVC7TWG49eIzLulcK2+Vxh3WRjnFnrxQFcro4q8RFsFCkzzoP9BWRdYJyuoiMLWivZJ0NOFSHRNcJtn9fhP37qwe4MUWp4NZbhirjAdtWasMez6ecCGzXQMbCGV3prhQm+AXpNpbx4Lp6VoPgfuECn0ZcMjh1LhSeiqBRSvGLJTAyMfmSQQLQnMWW4X5qhkXdpczFMsV1DvwQNfuZrSwT9BLnUlxCdcK3Y+mO2SlP60wmW5SPWoUKhOQTIoJFG8kTlcpj6dR7XwQvPhIenzmcL89bW5q3YX6jIYaxU5Hb+a7wWMj+BQAJAHJi+noqIygGygiV6uEEjBQE=
