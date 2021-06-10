@@ -119,9 +119,7 @@ or the the following for test:
 ```bash
 $ docker build --target test --tag my-test-image .
 ```
-
-
-
+___
 
 You can then start the dev container by running:
 ```bash
