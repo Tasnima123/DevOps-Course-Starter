@@ -1,9 +1,8 @@
 import pytest
-from dotenv import load_dotenv, find_dotenv
+from dotenv import load_dotenv
 from unittest.mock import patch
 import os
 from unittest.mock import Mock
-from threading import Thread
 from todo_app import app   
 from todo_app.classModels import ViewModel
 
@@ -11,8 +10,7 @@ sample_trello_cards_response = [{"id": "5fb55f9084036928139db350", "name": "test
 
 @pytest.fixture
 def client():
-       file_path = find_dotenv('.env.test')
-       load_dotenv(file_path, override=True)
+       load_dotenv('.env.test', override=True)
        test_app = app.create_app()
        with test_app.test_client() as client:
           yield client

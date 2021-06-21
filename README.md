@@ -98,7 +98,7 @@ You can then visit http://localhost:5000/ in your web browser to view the app.
 Download: 
 * Docker - you'll need to install [Docker Desktop](https://www.docker.com/products/docker-desktop). Installation instructions for Windows can be found [here](https://docs.docker.com/docker-for-windows/install/). If prompted to choose between using Linux or Windows containers during setup, make sure you choose Linux containers.
 
-#### Running the Dev & Prod Container
+#### Running the Dev, Prod & Test Container
 
 The dev container has two key behaviours:
 * Enables Flask's debugging/developer mode to provide detailed logging and feedback.
@@ -106,7 +106,8 @@ The dev container has two key behaviours:
 
 The difference between the dev and prod container is that the prov container uses Gunicorn to run the app, whereas the dev container uses Flask.
 
-You can create either a development or production image from the same Dockerfile, by running the following for dev:
+You can create either a development, production or test image from the same Dockerfile
+by running the following for dev:
 ```bash
 $ docker build --target development --tag todo-app:dev .
 ```
@@ -114,25 +115,32 @@ or the the following for prod:
 ```bash
 $ docker build --target production --tag todo-app:prod .
 ```
+or the the following for test:
+```bash
+$ docker build --target test --tag my-test-image .
+```
+___
 
 You can then start the dev container by running:
 ```bash
 $ docker run --env-file .env -p 5000:5000 -v $(pwd)/todo_app:/todo_app/todo_app  todo-app:dev
 ```
-
 or you can start the prod container by running:
 ```bash
 $ docker run --env-file .env -p 5000:5000 todo-app:prod
 ```
-
+or you can start the test container by running:
+```bash
+$ docker run --env-file .env my-test-image tests/e2e
+```
 ## Run Tests
 
 For Selenium tests, Download Firefox beforehand and you will need to download the matching version of the Gecko Driver executable and place it in the root of your project - the selenium driver just uses this under the hood.
 
 If in poetry env:
-* For unit and integration tests: run `pytest tests`
-* For Selenium tests: run `pytest tests_e2e`
+* For unit and integration tests: run `pytest tests/int_unit`
+* For Selenium tests: run `pytest tests/e2e`
 
 If not in poetry env: 
-* For unit and integration tests: run `poetry run pytest tests`
-* For Selenium tests: run `poetry run pytest tests_e2e`
+* For unit and integration tests: run `poetry run pytest tests/int_unit`
+* For Selenium tests: run `poetry run pytest tests/e2e`
