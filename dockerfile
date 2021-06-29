@@ -3,7 +3,6 @@ RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-
 ENV PATH="/root/.poetry/bin:$PATH"
 WORKDIR /todo_app
 COPY pyproject.toml poetry.lock ./
-RUN poetry install
 EXPOSE 5000
 FROM base as production
 RUN poetry config virtualenvs.create false --local && poetry install --no-dev
