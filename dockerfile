@@ -3,13 +3,15 @@ RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-
 ENV PATH="/root/.poetry/bin:$PATH"
 WORKDIR /todo_app
 COPY pyproject.toml poetry.lock ./
-RUN poetry install
 EXPOSE 5000
 FROM base as production
+RUN poetry config virtualenvs.create false --local && poetry install --no-dev
 COPY todo_app ./todo_app
-ENTRYPOINT [ "poetry" , "run" ]
-CMD [ "gunicorn","--bind", "0.0.0.0:5000", "todo_app.app:create_app()" ]
+COPY entrypoint.sh ./entrypoint.sh
+RUN chmod +x ./entrypoint.sh
+ENTRYPOINT [ "./entrypoint.sh" ] 
 FROM base as development
+RUN poetry install
 ENTRYPOINT [ "poetry" , "run" ]
 CMD ["flask","run", "--host=0.0.0.0"]
 FROM base as test
