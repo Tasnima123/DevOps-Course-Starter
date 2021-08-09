@@ -2,22 +2,26 @@ from flask import Flask, redirect, url_for, render_template, request
 import requests
 import os
 import datetime
+from bson.json_util import dumps
+from bson.json_util import loads
 from todo_app.flask_config import Config
 from todo_app.classModels import Item, ViewModel
+from flask_pymongo import PyMongo
 
 def create_app(): 
     app = Flask(__name__)
     app.config.from_object(Config)
-
-    API_KEY = os.environ.get("api_key")
-    TOKEN = os.environ.get("token")
-    TRELLO_BOARD_ID = os.environ.get("TRELLO_BOARD_ID")
+    username = os.getenv("MONGO_USER")
+    password = os.getenv("MONGO_PASSWORD")
+    url = os.getenv("MONGO_URL")
+    database = os.getenv("MONGO_DB")
+    MONGO_URI = str("mongodb+srv://"+username+":"+password+"@"+url+"/"+database+"?retryWrites=true&w=majority")
+    app.config['MONGO_URI'] = MONGO_URI
+    mongo = PyMongo(app)
+    todos = mongo.db.todos
 
     _DEFAULT_ITEMS = []
     itemDict = []
-    done_status = os.environ.get("done_status")
-    doing_status = os.environ.get("doing_status")
-    toDo_status = os.environ.get("toDo_status")
 
     @app.route('/items', methods=["GET", "PATCH"])
     @app.route('/', methods=["GET", "PATCH"])
@@ -52,58 +56,43 @@ def create_app():
         return next((item for item in items if item['id'] == id), None)
 
     def save_card(item):
+        date = datetime.datetime.now()
         existing_items = get_cards()
         updated_items = [item if item['id'] == existing_item['id'] else existing_item for existing_item in existing_items]
-
-        url = "https://api.trello.com/1/cards/"+item['id']
-        headers = {"Accept": "application/json" }
-        if (item['status'] == "Done"):
-            idList=done_status
-        elif (item['status'] == "Doing"):
-            idList=doing_status
-        else:
-            idList= toDo_status
-        querystring = {"key": API_KEY, "token": TOKEN, 'status': item['status'], "name": item['title'], "idList": idList}
-        response = requests.request("PUT",url,headers=headers,params=querystring)
+        todos.update({"_id":item['id']},{"$set":{"title":item['title'],"status":item['status'],'DateUpdated':date}})
         return item
 
     def add_card(title):
-        url = f"https://api.trello.com/1/cards"
-        querystring = {"name": title, "idList": toDo_status, "key": API_KEY, "token": TOKEN}
-        response = requests.request("POST", url, params=querystring)
-        card_id = response.json()["id"]
         date = datetime.datetime.now()
-        itemDict.append(Item(card_id, title, 'To Do', date.date()))
-        item = Item(card_id, title, 'To Do', date.date())
+        print (date)
+        id_val = str(len(_DEFAULT_ITEMS))
+        item = Item(id_val, title, 'To Do', date.date())
+        itemDict.append(item)
+        todos.insert_one({'_id': id_val, 'title': title,'status':'To Do','DateUpdated':date})
         return item
 
     def get_cards():
-        trello_api = requests.get("https://api.trello.com/1/boards/"+TRELLO_BOARD_ID+"/cards?key="+API_KEY+"&token="+TOKEN)
-        data = trello_api.json()
-        _DEFAULT_ITEMS = selectFields(data)
+        data = list(todos.find())
+        parsed = loads(dumps(data))
+        _DEFAULT_ITEMS = selectFields(parsed)
         return _DEFAULT_ITEMS
 
-    def selectFields(data):
-        for record in data:
-            title = record.get('name')
+    def selectFields(parsed):
+        for x in parsed:
+            title = x['title']
             vals = [li['title'] for li in _DEFAULT_ITEMS]
             for value in vals:
                 if value == title:
                     break
             else:
-                id = record.get('id')
-                date = record.get('dateLastActivity')
-                date_time_obj = datetime.datetime.strptime(date, '%Y-%m-%dT%H:%M:%S.%fZ')
-                if (record.get('idList')==done_status):
-                    status = "Done"
-                elif (record.get('idList')==toDo_status):
-                    status = "To Do"
-                else:
-                    status = "Doing"
-                itemDict.append(Item(id, title, status, date_time_obj.date()))
-                item = { 'id': id, 'title': title, 'status': status, 'DateUpdated': date_time_obj.date() }
+                id = x['_id']
+                status= x['status']
+                date = x['DateUpdated']
+                itemDict.append(Item(id, title, status, date))
+                item = { 'id': id, 'title': title, 'status': status, 'DateUpdated': date }
                 _DEFAULT_ITEMS.append(item)
         return _DEFAULT_ITEMS
+
     return app
 
 if __name__ == '__main__':
