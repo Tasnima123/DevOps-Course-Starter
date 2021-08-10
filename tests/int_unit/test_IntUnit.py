@@ -27,12 +27,15 @@ def test_viewModel():
        assert len(view_model.statusDoing) == 1
        assert len(view_model.show_all_done_items) == 1
 
-@pytest.fixture
 def patch_mongo(monkeypatch):
-       db = mongomock.MongoClient()
+       username = os.getenv("MONGO_USER")
+       password = os.getenv("MONGO_PASSWORD")
+       url = os.getenv("MONGO_URL")
+       database = os.getenv("MONGO_DB")
+       db = mongomock.MongoClient("mongodb+srv://"+username+":"+password+"@"+url+"/"+database+"?retryWrites=true&w=majority")
        def fake_mongo():
             return db
-       monkeypatch.setattr(client, fake_mongo)
+       monkeypatch.setattr('app.create_app', fake_mongo)
 
 @patch('requests.get')
 def test_index_page(mock_get_requests, client):
