@@ -6,7 +6,7 @@ import mongomock
 from todo_app import app   
 from todo_app.classModels import ViewModel
 
-sample_cards_response = [{"_id": "5fb55f9084036928139db350", "title": "testTitle", "status": "To Do", "date": "2020-11-18T18:43:33.434Z"}]
+sample_cards_response = [{"_id": 3, "title": "testTitle", "status": "To Do", "date": "2020-11-18T18:43:33.434Z"}]
 
 @pytest.fixture
 def client():
@@ -27,7 +27,7 @@ def test_viewModel():
        assert len(view_model.statusDoing) == 1
        assert len(view_model.show_all_done_items) == 1
 
-def patch_mongo(monkeypatch):
+def test_mongo(mongo):
        username = os.getenv("MONGO_USER")
        password = os.getenv("MONGO_PASSWORD")
        url = os.getenv("MONGO_URL")
@@ -35,11 +35,11 @@ def patch_mongo(monkeypatch):
        db = mongomock.MongoClient("mongodb+srv://"+username+":"+password+"@"+url+"/"+database+"?retryWrites=true&w=majority")
        def fake_mongo():
             return db
-       monkeypatch.setattr('app.create_app', fake_mongo)
+            
 
 @patch('requests.get')
 def test_index_page(mock_get_requests, client):
-       mock_get_requests.side_effect = patch_mongo
+       mock_get_requests.side_effect = test_mongo
        response = client.get('/')
        assert "testTitle" in response.data.decode() 
 
