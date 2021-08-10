@@ -2,11 +2,11 @@ import pytest
 from dotenv import load_dotenv
 from unittest.mock import patch
 import os
-from unittest.mock import Mock
+import mongomock
 from todo_app import app   
 from todo_app.classModels import ViewModel
 
-sample_trello_cards_response = [{"id": "5fb55f9084036928139db350", "name": "testTitle", "status": "To Do", "dateLastActivity": "2020-11-18T18:43:33.434Z"}]
+sample_cards_response = [{"_id": "5fb55f9084036928139db350", "title": "testTitle", "status": "To Do", "date": "2020-11-18T18:43:33.434Z"}]
 
 @pytest.fixture
 def client():
@@ -27,21 +27,16 @@ def test_viewModel():
        assert len(view_model.statusDoing) == 1
        assert len(view_model.show_all_done_items) == 1
 
-def mock_get_cards(url):
-       TRELLO_BOARD_ID = os.environ.get("TRELLO_BOARD_ID")
-       API_KEY = os.environ.get("api_key")
-       TOKEN = os.environ.get("token")
-       if url == f"https://api.trello.com/1/boards/"+TRELLO_BOARD_ID+"/cards?key="+API_KEY+"&token="+TOKEN:
-              print("URL was hit")
-              response = Mock()
-              response.status_code = 200
-              response.json.return_value = sample_trello_cards_response 
-              return response
-       return None
+@pytest.fixture
+def patch_mongo(monkeypatch):
+       db = mongomock.MongoClient()
+       def fake_mongo():
+            return db
+       monkeypatch.setattr(client, fake_mongo)
 
 @patch('requests.get')
 def test_index_page(mock_get_requests, client):
-       mock_get_requests.side_effect = mock_get_cards
+       mock_get_requests.side_effect = patch_mongo
        response = client.get('/')
        assert "testTitle" in response.data.decode() 
 
