@@ -6,7 +6,7 @@ from bson.json_util import dumps
 from bson.json_util import loads
 from todo_app.flask_config import Config
 from todo_app.classModels import Item, ViewModel
-from flask_pymongo import PyMongo
+import pymongo
 
 def create_app(): 
     app = Flask(__name__)
@@ -15,10 +15,11 @@ def create_app():
     password = os.getenv("MONGO_PASSWORD")
     url = os.getenv("MONGO_URL")
     database = os.getenv("MONGO_DB")
-    MONGO_URI = str("mongodb+srv://"+username+":"+password+"@"+url+"/"+database+"?retryWrites=true&w=majority")
+    protocol = os.getenv("MONGO_PROTOCOL")
+    MONGO_URI = str(protocol+username+":"+password+"@"+url+"/"+database+"?retryWrites=true&w=majority")
     app.config['MONGO_URI'] = MONGO_URI
-    mongo = PyMongo(app)
-    todos = mongo.db.todos
+    mongo = pymongo.MongoClient(MONGO_URI)
+    todos = mongo.MyDatabase.todos
 
     _DEFAULT_ITEMS = []
     itemDict = []
