@@ -144,7 +144,7 @@ If not in poetry env:
 ## Continuous Deployment
 
 This app is deployed on Heroku. 
-You can then visit this link in your web browser to view the app.
+You can then visit this link [here](https://devops-project-app.herokuapp.com/) in your web browser to view the app.
 
 The Travis CI:
 * automatically builds and deploys the main branch to Heroku
