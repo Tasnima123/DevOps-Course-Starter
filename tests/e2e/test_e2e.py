@@ -13,13 +13,14 @@ def test_app():
        file_path = find_dotenv('.env')
        load_dotenv(file_path, override=True)
        db = create_collection()
+       database = db.MyDatbase
        application = app.create_app()
        thread = Thread(target=lambda: application.run(use_reloader=False))
        thread.daemon = True
        thread.start()
        yield app
        thread.join(1)
-       db.mongo.testCollection.drop()
+       database.testCollection.drop()
 
 @pytest.fixture(scope='module')
 def driver():
