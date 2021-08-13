@@ -17,7 +17,7 @@ def create_app():
     db = os.getenv("MONGO_DB")
     protocol = os.getenv("MONGO_PROTOCOL")
     collection = os.getenv("MONGO_COLLECTION")
-    MONGO_URI =str(protocol)+str(username)+":"+str(password)+"@"+str(url)+"/"+str(db)+"?retryWrites=true&w=majority"
+    MONGO_URI =protocol+str(username)+":"+str(password)+"@"+str(url)+"/"+str(db)+"?retryWrites=true&w=majority"
     app.config['MONGO_URI'] = MONGO_URI
     mongo = pymongo.MongoClient(MONGO_URI)
     collections = mongo.myDatabase.list_collection_names()
