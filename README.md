@@ -144,3 +144,12 @@ If in poetry env:
 If not in poetry env: 
 * For unit and integration tests: run `poetry run pytest tests/int_unit`
 * For Selenium tests: run `poetry run pytest tests/e2e`
+
+## Continuous Deployment
+
+This app is deployed on Heroku. 
+You can then visit this link in your web browser to view the app.
+
+The Travis CI:
+* automatically builds and deploys the main branch to Heroku
+* publishes the Docker images to Docker Hub
