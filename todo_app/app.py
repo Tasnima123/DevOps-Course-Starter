@@ -63,7 +63,7 @@ def create_app():
         date = datetime.datetime.now()
         existing_items = get_cards()
         updated_items = [item if item['id'] == existing_item['id'] else existing_item for existing_item in existing_items]
-        todos.update({"_id":item['id']},{"$set":{"title":item['title'],"status":item['status'],'DateUpdated':date}})
+        todos.update_one({"_id":item['id']},{"$set":{"title":item['title'],"status":item['status'],'DateUpdated':date}})
         return item
 
     def add_card(title):
