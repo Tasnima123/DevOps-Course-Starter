@@ -17,7 +17,7 @@ def create_app():
     database=os.getenv("MONGO_DB")
     protocol=os.getenv("MONGO_PROTOCOL")
     collection=os.getenv("MONGO_COLLECTION")
-    MONGO_URI=str(protocol+username+":"+password+"@"+url+"/"+database+"?retryWrites=true&w=majority")
+    MONGO_URI=protocol+username+":"+password+"@"+url+"/"+database+"?retryWrites=true&w=majority"
     mongo = pymongo.MongoClient(MONGO_URI)
     collections = mongo.myDatabase.list_collection_names()
     if collection not in collections:
