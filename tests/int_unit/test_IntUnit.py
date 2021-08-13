@@ -36,8 +36,12 @@ def mongo_setup():
        database = os.getenv("MONGO_DB")
        url = os.getenv("MONGO_URL")
        protocol = os.getenv("MONGO_PROTOCOL")
+       collection = os.getenv("MONGO_COLLECTION")
        db = pymongo.MongoClient(protocol+username+":"+password+"@"+url+"/"+database+"?retryWrites=true&w=majority")
-       db.MyDatabase.todos.insert_one(sample_cards_response)
+       collections = db.myDatabase.list_collection_names()
+       if collection not in collections:
+              todos = db.MyDatabase[collection]
+       todos.insert_one(sample_cards_response)
 
 def test_index_page(client):
        mongo_setup()

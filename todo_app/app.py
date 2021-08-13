@@ -14,12 +14,15 @@ def create_app():
     username = os.getenv("MONGO_USER")
     password = os.getenv("MONGO_PASSWORD")
     url = os.getenv("MONGO_URL")
-    database = os.getenv("MONGO_DB")
+    db = os.getenv("MONGO_DB")
     protocol = os.getenv("MONGO_PROTOCOL")
-    MONGO_URI = str(protocol+username+":"+password+"@"+url+"/"+database+"?retryWrites=true&w=majority")
+    collection = os.getenv("MONGO_COLLECTION")
+    MONGO_URI = str(protocol+username+":"+password+"@"+url+"/"+db+"?retryWrites=true&w=majority")
     app.config['MONGO_URI'] = MONGO_URI
     mongo = pymongo.MongoClient(MONGO_URI)
-    todos = mongo.MyDatabase.todos
+    collections = mongo.myDatabase.list_collection_names()
+    if collection not in collections:
+        todos = mongo.MyDatabase[collection]
 
     _DEFAULT_ITEMS = []
     itemDict = []
