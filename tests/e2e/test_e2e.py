@@ -13,7 +13,7 @@ def test_app():
        file_path = find_dotenv('.env')
        load_dotenv(file_path, override=True)
        db = create_collection()
-       database = db.MyDatbase
+       database = db.MyDatabase
        application = app.create_app()
        thread = Thread(target=lambda: application.run(use_reloader=False))
        thread.daemon = True
