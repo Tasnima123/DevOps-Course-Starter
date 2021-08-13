@@ -11,6 +11,7 @@ python-dotenv = "^0.14.0"
 requests = "^2.25.0"
 gunicorn = "^20.0.4"
 pymongo = {extras = ["srv"], version = "^3.11.4"}
+mongomock = "^3.23.0"
 
 [tool.poetry.dev-dependencies]
 autopep8 = "^1.5.4"

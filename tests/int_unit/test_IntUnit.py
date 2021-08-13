@@ -1,11 +1,11 @@
 import pymongo
 import pytest
 from dotenv import load_dotenv
-from unittest.mock import patch
 import os
 import mongomock
 from todo_app import app   
 from todo_app.classModels import ViewModel
+
 
 sample_cards_response = {"_id": 3, "title": "testTitle", "status": "To Do", "DateUpdated": "2020-11-18T18:43:33.434Z"}
 
