@@ -1,3 +1,4 @@
+from bson.objectid import ObjectId
 from flask import Flask, redirect, url_for, render_template, request
 import requests
 import os
@@ -68,7 +69,8 @@ def create_app():
     def add_card(title):
         date = datetime.datetime.now()
         print (date)
-        id_val = str(len(_DEFAULT_ITEMS))
+        id_val = ObjectId()
+        id_val = str(id_val)
         item = Item(id_val, title, 'To Do', date.date())
         itemDict.append(item)
         todos.insert_one({'_id': id_val, 'title': title,'status':'To Do','DateUpdated':date})
@@ -76,12 +78,12 @@ def create_app():
 
     def get_cards():
         data = list(todos.find())
-        parsed = loads(dumps(data))
-        _DEFAULT_ITEMS = selectFields(parsed)
+        updated_data = loads(dumps(data))
+        _DEFAULT_ITEMS = selectFields(updated_data)
         return _DEFAULT_ITEMS
 
-    def selectFields(parsed):
-        for x in parsed:
+    def selectFields(updated_data):
+        for x in updated_data:
             title = x['title']
             vals = [li['title'] for li in _DEFAULT_ITEMS]
             for value in vals:
