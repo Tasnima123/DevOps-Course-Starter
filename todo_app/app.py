@@ -14,9 +14,10 @@ def create_app():
     username=os.getenv("MONGO_USER")
     password=os.getenv("MONGO_PASSWORD")
     url=os.getenv("MONGO_URL")
+    database=os.getenv("MONGO_DB")
     protocol=os.getenv("MONGO_PROTOCOL")
     collection=os.getenv("MONGO_COLLECTION")
-    MONGO_URI="{0}{1}:{2}@{3}/MyDatabase?retryWrites=true&w=majority".format(protocol,username,password,url)
+    MONGO_URI="{0}{1}:{2}@{3}/MyDatabase?retryWrites=true&w=majority".format(protocol,username,password,url,database)
     mongo = pymongo.MongoClient(MONGO_URI)
     collections = mongo.MyDatabase.list_collection_names()
     if collection not in collections:
@@ -75,7 +76,7 @@ def create_app():
 
     def get_cards():
         data = list(todos.find())
-        parsed = loads(data)
+        parsed = loads(dumps(data))
         _DEFAULT_ITEMS = selectFields(parsed)
         return _DEFAULT_ITEMS
 
