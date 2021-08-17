@@ -34,19 +34,15 @@ $ cp .env.template .env  # (first time only)
 
 The `.env` file is used by flask to set environment variables when running `flask run`. This enables things like development mode (which also enables features like hot reloading when you make a file change). There's also a [SECRET_KEY](https://flask.palletsprojects.com/en/1.1.x/config/#SECRET_KEY) variable which is used to encrypt the flask session cookie.\'
 
-Other values that we need for .env: 
-* `token` = token key
-* `api_key` = api key
-* `done_status` = done status id
-* `doing_status` = doing status id
-* `toDo_status` = To Do status id
-* `TRELLO_BOARD_ID` = board id
+You will need to create a free cluster using [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) if you do not have one already.
 
-We're going to be using Trello's API to fetch and save to-do tasks. In order to call their API, you need to first create a Trello account, then generate an API key and token by following the instructions at https://trello.com/app-key.
-
-Once you have both, you can update the .env file to store these 2 values. These values will be called in the app.py file as: `API_KEY = os.environ.get("api_key")` and `TOKEN = os.environ.get("token")`
-
-The other details can also be found from the TRELLO API.
+Other values that we need for .env:
+* `MONGO_URL`= URL for MongoDB cluster
+* `MONGO_USER`= MongoDB username
+* `MONGO_PASSWORD`= MongoDB password
+* `MONGO_DB`= MongoDB database
+* `MONGO_PROTOCOL`= MongoDB protocol (e.g. 'mongodb+srv://')
+* `MONGO_COLLECTION`= MongoDB collection
 
 ## Running the App
 
@@ -144,3 +140,12 @@ If in poetry env:
 If not in poetry env: 
 * For unit and integration tests: run `poetry run pytest tests/int_unit`
 * For Selenium tests: run `poetry run pytest tests/e2e`
+
+## Continuous Deployment
+
+This app is deployed on Heroku. 
+You can then visit this link [here](https://devops-project-app.herokuapp.com/) in your web browser to view the app.
+
+The Travis CI:
+* automatically builds and deploys the main branch to Heroku
+* publishes the Docker images to Docker Hub

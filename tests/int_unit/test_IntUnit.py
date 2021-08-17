@@ -1,19 +1,22 @@
+import pymongo
 import pytest
 from dotenv import load_dotenv
-from unittest.mock import patch
 import os
-from unittest.mock import Mock
+import mongomock
 from todo_app import app   
 from todo_app.classModels import ViewModel
 
-sample_trello_cards_response = [{"id": "5fb55f9084036928139db350", "name": "testTitle", "status": "To Do", "dateLastActivity": "2020-11-18T18:43:33.434Z"}]
+
+sample_cards_response = {"_id": 3, "title": "testTitle", "status": "To Do", "DateUpdated": "2020-11-18T18:43:33.434Z"}
 
 @pytest.fixture
 def client():
        load_dotenv('.env.test', override=True)
-       test_app = app.create_app()
-       with test_app.test_client() as client:
-          yield client
+       url = os.getenv("MONGO_URL")
+       with mongomock.patch(servers=((url, 27017),)):
+              test_app = app.create_app()
+              with test_app.test_client() as client:
+                     yield client
 
 def test_viewModel():
        item = [{'id':"testID", 'title':"testTitle1", 'status':"To Do", 'DateUpdated':"testDate"},
@@ -27,21 +30,21 @@ def test_viewModel():
        assert len(view_model.statusDoing) == 1
        assert len(view_model.show_all_done_items) == 1
 
-def mock_get_cards(url):
-       TRELLO_BOARD_ID = os.environ.get("TRELLO_BOARD_ID")
-       API_KEY = os.environ.get("api_key")
-       TOKEN = os.environ.get("token")
-       if url == f"https://api.trello.com/1/boards/"+TRELLO_BOARD_ID+"/cards?key="+API_KEY+"&token="+TOKEN:
-              print("URL was hit")
-              response = Mock()
-              response.status_code = 200
-              response.json.return_value = sample_trello_cards_response 
-              return response
-       return None
+def mongo_setup():
+       username = os.getenv("MONGO_USER")
+       password = os.getenv("MONGO_PASSWORD")
+       database = os.getenv("MONGO_DB")
+       url = os.getenv("MONGO_URL")
+       protocol = os.getenv("MONGO_PROTOCOL")
+       collection = os.getenv("MONGO_COLLECTION")
+       db = pymongo.MongoClient(protocol+username+":"+password+"@"+url+"/"+database+"?retryWrites=true&w=majority")
+       collections = db.myDatabase.list_collection_names()
+       if collection not in collections:
+              todos = db.MyDatabase[collection]
+       todos.insert_one(sample_cards_response)
 
-@patch('requests.get')
-def test_index_page(mock_get_requests, client):
-       mock_get_requests.side_effect = mock_get_cards
+def test_index_page(client):
+       mongo_setup()
        response = client.get('/')
        assert "testTitle" in response.data.decode() 
 

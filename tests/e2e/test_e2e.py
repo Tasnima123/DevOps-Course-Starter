@@ -6,19 +6,21 @@ from dotenv import load_dotenv, find_dotenv
 import time
 import os
 import requests
+import pymongo
 
 @pytest.fixture(scope='module')
 def test_app():
        file_path = find_dotenv('.env')
        load_dotenv(file_path, override=True)
-       board_id = create_trello_board()
+       db = create_collection()
+       database = db.MyDatabase
        application = app.create_app()
        thread = Thread(target=lambda: application.run(use_reloader=False))
        thread.daemon = True
        thread.start()
        yield app
        thread.join(1)
-       delete_trello_board(board_id)
+       database.testCollection.drop()
 
 @pytest.fixture(scope='module')
 def driver():
@@ -37,6 +39,7 @@ def test_createTask(test_app,driver):
     testDriver(test_app,driver)
     driver.find_element_by_id("itemTitle").send_keys("Selenium_test")
     driver.find_element_by_id("submitButton").click()
+    time.sleep(3)
     value = driver.find_element_by_id("toDo_list")
     time.sleep(2)
     assert "Selenium_test" in value.text
@@ -50,6 +53,7 @@ def test_moveDoing(test_app,driver):
     input.send_keys("Doing")
     driver.find_element_by_id("Update").click()
     driver.find_element_by_id("homepage").click()
+    time.sleep(3)
     value = driver.find_element_by_id("Doing_list")
     time.sleep(2)
     assert "Selenium_test" in value.text
@@ -63,36 +67,22 @@ def test_moveDone(test_app,driver):
     input.send_keys("Done")
     driver.find_element_by_id("Update").click()
     driver.find_element_by_id("homepage").click()
+    time.sleep(3)
     value = driver.find_element_by_id("Done_list")
     time.sleep(2)
     assert "Selenium_test" in value.text
 
-def create_trello_board():
-    API_KEY = os.environ.get("api_key")
-    TOKEN = os.environ.get("token")
-    url = f"https://api.trello.com/1/boards/"
-    query = {"key": API_KEY, "token": TOKEN, "name": 'TestBoard'}
-    response = requests.request("POST",url,params=query)
-    value = response.json()["id"]
-    url = "https://api.trello.com/1/boards/"+value+"/lists"
-    query = {"key": API_KEY, "token": TOKEN}
-    response = requests.request("GET",url, params=query)
-    os.environ["done_status"] = response.json()[0]["id"]
-    os.environ["doing_status"] = response.json()[1]["id"]
-    os.environ["toDo_status"] = response.json()[2]["id"]
-    os.environ["TRELLO_BOARD_ID"] = value
-    return value
-
-def delete_trello_board(id):
-    API_KEY = os.environ.get("api_key")
-    TOKEN = os.environ.get("token")
-    url = "https://api.trello.com/1/boards/"+id
-    query = {
-        'key': API_KEY,
-        'token': TOKEN
-        }
-    requests.request("DELETE", url,params=query)
-
+def create_collection():
+    username = os.getenv("MONGO_USER")
+    password = os.getenv("MONGO_PASSWORD")
+    url = os.getenv("MONGO_URL")
+    protocol = os.getenv("MONGO_PROTOCOL")
+    database = os.getenv("MONGO_DB")
+    MONGO_URI = str(protocol+username+":"+password+"@"+url+"/"+database+"?retryWrites=true&w=majority")
+    db = pymongo.MongoClient(MONGO_URI)
+    new_collection = 'testCollection'
+    os.environ["MONGO_COLLECTION"]=new_collection
+    return db
 
 
 
