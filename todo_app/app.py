@@ -1,6 +1,7 @@
 from bson.objectid import ObjectId
 from flask import Flask, redirect, url_for, render_template, request
-import requests
+from flask_login import LoginManager,login_required, login_user
+from oauthlib.oauth2 import WebApplicationClient
 import os
 import datetime
 from bson.json_util import dumps
@@ -8,6 +9,10 @@ from bson.json_util import loads
 from todo_app.flask_config import Config
 from todo_app.classModels import Item, ViewModel
 import pymongo
+
+client_id = os.getenv("client-id")
+client_secret = os.getenv("CLIENT-secret")
+client = WebApplicationClient(client_id)
 
 def create_app(): 
     app = Flask(__name__)
@@ -29,17 +34,20 @@ def create_app():
 
     @app.route('/items', methods=["GET", "PATCH"])
     @app.route('/', methods=["GET", "PATCH"])
+    @login_required
     def index():
         items = get_cards()
         item_view_model = ViewModel(items)
         return render_template('index.html',view_model=item_view_model)
 
     @app.route('/items/<id>', methods=["GET", "POST"])
+    @login_required
     def get(id):
         item = get_card(id)
         return render_template('saveItem.html', item = item)
 
     @app.route('/items/<id>/edit', methods=["GET", "POST", "PUT"])
+    @login_required
     def edit(id):
         item = get_card(id)
         if request.method=="POST":
@@ -50,6 +58,7 @@ def create_app():
         return render_template('edit.html', item = item)
 
     @app.route('/items/new', methods=["POST"])
+    @login_required
     def add():
         title = request.form.get('itemTitle')
         add_card(title)
@@ -97,8 +106,20 @@ def create_app():
                 item = { 'id': id, 'title': title, 'status': status, 'DateUpdated': date }
                 _DEFAULT_ITEMS.append(item)
         return _DEFAULT_ITEMS
-
     return app
 
+login_manager = LoginManager()
+@login_manager.unauthorized_handler
+def unauthenticated():
+    login_manager.login_view='auth.login'
+    url = client.prepare_request_uri('https://github.com/login/oauth/authorize', redirect_uri='http://127.0.0.1:5000/login/')
+    return redirect(url) 
+@login_manager.user_loader
+def load_user(user_id):
+    return None
+
+app = create_app()
+login_manager.init_app(app)
+
 if __name__ == '__main__':
-    create_app().run()
+    app.run()
