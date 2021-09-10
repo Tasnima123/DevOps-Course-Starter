@@ -1,8 +1,9 @@
 from bson.objectid import ObjectId
 from flask import Flask, redirect, url_for, render_template, request
-from flask_login import LoginManager,login_required, login_user
+from flask_login import LoginManager,login_required, login_user, UserMixin
 from oauthlib.oauth2 import WebApplicationClient
 import os
+import requests
 import datetime
 from bson.json_util import dumps
 from bson.json_util import loads
@@ -10,8 +11,8 @@ from todo_app.flask_config import Config
 from todo_app.classModels import Item, ViewModel
 import pymongo
 
-client_id = os.getenv("client-id")
-client_secret = os.getenv("CLIENT-secret")
+client_id = os.getenv("client_id")
+client_secret = os.getenv("client_secret")
 client = WebApplicationClient(client_id)
 
 def create_app(): 
@@ -106,6 +107,21 @@ def create_app():
                 item = { 'id': id, 'title': title, 'status': status, 'DateUpdated': date }
                 _DEFAULT_ITEMS.append(item)
         return _DEFAULT_ITEMS
+    
+    @app.route('/login/', methods=["GET", "POST"])
+    def login():
+        code = request.args.get('code')
+        request_body = {
+            "code":code,
+            "client_id":client_id,
+            "client_secret":client_secret
+        }
+        response = requests.post("https://github.com/login/oauth/access_token",request_body,headers={"Accept": "application/json"})
+        parsed = client.parse_request_body_response(response.content)
+        access_token= parsed["access_token"]
+        raw_user = requests.get("https://api.github.com/user",headers={"Authorization": "token {0}".format(access_token)}).json()
+        user = login_user(User(raw_user["login"]))
+        return redirect("/")
     return app
 
 login_manager = LoginManager()
@@ -116,10 +132,22 @@ def unauthenticated():
     return redirect(url) 
 @login_manager.user_loader
 def load_user(user_id):
-    return None
+    return User(user_id)
 
+class User(UserMixin):
+    is_authenticated = True
+    def __init__(self, id):
+        self.id = id
+    
+    def get_id(self):
+        return self.id
+
+    def is_authenticated(self):
+        return True
+    
 app = create_app()
 login_manager.init_app(app)
 
 if __name__ == '__main__':
+    app.config['LOGIN_DISABLED'] = True
     app.run()
