@@ -37,6 +37,7 @@ def testDriver(test_app,driver):
     
 def test_createTask(test_app,driver):
     testDriver(test_app,driver)
+    time.sleep(3)
     driver.find_element_by_id("itemTitle").send_keys("Selenium_test")
     driver.find_element_by_id("submitButton").click()
     time.sleep(3)
