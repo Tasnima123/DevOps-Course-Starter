@@ -44,6 +44,11 @@ Other values that we need for .env:
 * `MONGO_PROTOCOL`= MongoDB protocol (e.g. 'mongodb+srv://')
 * `MONGO_COLLECTION`= MongoDB collection
 
+As this app is registered on Github for authentication, additition values are needed for .env:
+* `client_id`
+* `client_secret`
+
+
 ## Running the App
 
 ### With Poetry and Flask
