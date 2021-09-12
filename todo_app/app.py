@@ -1,6 +1,6 @@
 from bson.objectid import ObjectId
 from flask import Flask, redirect, url_for, render_template, request
-from flask_login import LoginManager,login_required, login_user, UserMixin
+from flask_login import LoginManager,login_required, login_user, UserMixin, current_user
 from oauthlib.oauth2 import WebApplicationClient
 import os
 import requests
@@ -49,6 +49,7 @@ def create_app():
 
     @app.route('/items/<id>/edit', methods=["GET", "POST", "PUT"])
     @login_required
+    @check_role
     def edit(id):
         item = get_card(id)
         if request.method=="POST":
@@ -60,6 +61,7 @@ def create_app():
 
     @app.route('/items/new', methods=["POST"])
     @login_required
+    @check_role
     def add():
         title = request.form.get('itemTitle')
         add_card(title)
@@ -122,6 +124,7 @@ def create_app():
         raw_user = requests.get("https://api.github.com/user",headers={"Authorization": "token {0}".format(access_token)}).json()
         user = login_user(User(raw_user["login"]))
         return redirect("/")
+
     return app
 
 login_manager = LoginManager()
@@ -134,16 +137,32 @@ def unauthenticated():
 def load_user(user_id):
     return User(user_id)
 
+def check_role(func):
+    def wrapper_function(*args, **kwargs):
+        if 'Writer' in current_user.role:
+            func(*args, **kwargs)
+    wrapper_function.__name__ = func.__name__
+    return wrapper_function
+
 class User(UserMixin):
     is_authenticated = True
     def __init__(self, id):
         self.id = id
+        self.roles = set()
+        self.roles.add('reader')
     
     def get_id(self):
         return self.id
 
     def is_authenticated(self):
         return True
+    
+    @property
+    def role(self):
+        if "writer" in self.roles:
+            return 'Writer'
+        else:
+            return 'Reader'
     
 app = create_app()
 login_manager.init_app(app)

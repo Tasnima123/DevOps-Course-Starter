@@ -6,16 +6,18 @@
     <h1 class="display-4">To-Do App</h1>
     <p class="lead">Just another to-do app.</p>
   </div>
-<form action="{{ url_for('add') }}" method="POST">
+{% if 'Writer' in current_user.role %}
+  <form action="{{ url_for('add') }}" method="POST">
+      <div class="form-example">
+        <label for="name">Enter item title: </label>
+        <input type="text" name="itemTitle" id="itemTitle" required>
+      </div>
     <div class="form-example">
-      <label for="name">Enter item title: </label>
-      <input type="text" name="itemTitle" id="itemTitle" required>
+      <input type="submit" id="submitButton" class="btn btn-outline-primary btn-sm" value="Post!">
     </div>
-  <div class="form-example">
-    <input type="submit" id="submitButton" class="btn btn-outline-primary btn-sm" value="Post!">
-  </div>
-  </form>
-  <br/>
+    </form>
+    <br/>
+{% endif %}
   <h2>Items</h2>
   <div class="row">
     <div class="col-md-12">
