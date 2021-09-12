@@ -16,7 +16,7 @@
           Title: {{ item.title }}
         </li>
       </ul>
-        {% if 'Writer' in current_user.role %}
+        {% if 'writer' in current_user.roles %}
         <a href="{{url_for('edit', id=item.id)}}" id="editButton">Edit</a>
         {% endif %}
     </div>

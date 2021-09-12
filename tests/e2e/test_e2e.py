@@ -5,7 +5,6 @@ from todo_app import app
 from dotenv import load_dotenv, find_dotenv   
 import time
 import os
-import requests
 import pymongo
 
 @pytest.fixture(scope='module')
@@ -30,6 +29,7 @@ def driver():
     opts.add_argument('--disable-dev-shm-usage')
     with webdriver.Chrome(options=opts) as driver:
         yield driver
+        driver.close()
 
 def testDriver(test_app,driver):
     driver.get('http://127.0.0.1:5000/')
@@ -47,6 +47,7 @@ def test_createTask(test_app,driver):
 
 def test_moveDoing(test_app,driver):   
     testDriver(test_app,driver)
+    time.sleep(3)
     driver.find_element_by_link_text('Selenium_test').click()
     driver.find_element_by_id("editButton").click()
     input = driver.find_element_by_id("itemStatus")
@@ -61,6 +62,7 @@ def test_moveDoing(test_app,driver):
     
 def test_moveDone(test_app,driver):
     testDriver(test_app,driver)
+    time.sleep(3)
     driver.find_element_by_link_text('Selenium_test').click()
     driver.find_element_by_id("editButton").click()
     input = driver.find_element_by_id("itemStatus")

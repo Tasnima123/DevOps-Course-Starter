@@ -17,9 +17,8 @@ client = WebApplicationClient(client_id)
 
 def create_app():
     app = Flask(__name__)
-    app.config['LOGIN_DISABLED'] = True
     app.config.from_object(Config)
-    login_manager.init_app(app)
+    app.config['LOGIN_DISABLED']=True
     username=os.getenv("MONGO_USER")
     password=os.getenv("MONGO_PASSWORD")
     url=os.getenv("MONGO_URL")
@@ -98,13 +97,13 @@ def create_app():
 
     def selectFields(updated_data):
         for x in updated_data:
-            title = x['title']
-            vals = [li['title'] for li in _DEFAULT_ITEMS]
+            id = x['_id']
+            vals = [li['id'] for li in _DEFAULT_ITEMS]
             for value in vals:
-                if value == title:
+                if value == id:
                     break
             else:
-                id = x['_id']
+                title = x['title']
                 status= x['status']
                 date = x['DateUpdated']
                 itemDict.append(Item(id, title, status, date))
@@ -127,6 +126,7 @@ def create_app():
         user = login_user(User(raw_user["login"]))
         return redirect("/")
 
+    login_manager.init_app(app)
     return app
 
 login_manager = LoginManager()
@@ -141,30 +141,34 @@ def load_user(user_id):
 
 def check_role(func):
     def wrapper_function(*args, **kwargs):
-        if 'Writer' in current_user.role:
-            func(*args, **kwargs)
+        if current_user.is_authenticated:
+            if 'writer' in current_user.roles:
+                result = func(*args, **kwargs)
+                return result
     wrapper_function.__name__ = func.__name__
     return wrapper_function
 
 class User(UserMixin):
-    is_authenticated = True
     def __init__(self, id):
         self.id = id
-        self.roles = set()
-        self.roles.add('writer')
+        self.role = set()
+        self.role.add('writer')
     
     def get_id(self):
         return self.id
+    
+    def is_active(self):
+        return True
+
+    def is_anonymous(self):
+        return False
 
     def is_authenticated(self):
         return True
     
     @property
-    def role(self):
-        if "writer" in self.roles:
-            return 'Writer'
-        else:
-            return 'Reader'
+    def roles(self):
+        return self.role
 
 if __name__ == '__main__':
-    create_app().run()
+    create_app.run()

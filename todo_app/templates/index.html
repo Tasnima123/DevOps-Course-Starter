@@ -6,7 +6,7 @@
     <h1 class="display-4">To-Do App</h1>
     <p class="lead">Just another to-do app.</p>
   </div>
-{% if 'Writer' in current_user.role %}
+{% if 'writer' in current_user.roles %}
   <form action="{{ url_for('add') }}" method="POST">
       <div class="form-example">
         <label for="name">Enter item title: </label>
