@@ -15,9 +15,11 @@ client_id = os.getenv("client_id")
 client_secret = os.getenv("client_secret")
 client = WebApplicationClient(client_id)
 
-def create_app(): 
+def create_app():
     app = Flask(__name__)
+    app.config['LOGIN_DISABLED'] = True
     app.config.from_object(Config)
+    login_manager.init_app(app)
     username=os.getenv("MONGO_USER")
     password=os.getenv("MONGO_PASSWORD")
     url=os.getenv("MONGO_URL")
@@ -149,7 +151,7 @@ class User(UserMixin):
     def __init__(self, id):
         self.id = id
         self.roles = set()
-        self.roles.add('reader')
+        self.roles.add('writer')
     
     def get_id(self):
         return self.id
@@ -163,10 +165,6 @@ class User(UserMixin):
             return 'Writer'
         else:
             return 'Reader'
-    
-app = create_app()
-login_manager.init_app(app)
 
 if __name__ == '__main__':
-    app.config['LOGIN_DISABLED'] = True
-    app.run()
+    create_app().run()
