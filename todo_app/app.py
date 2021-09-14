@@ -18,13 +18,11 @@ client = WebApplicationClient(client_id)
 
 def create_app():
     app = Flask(__name__)
+    app.config.from_object(Config)
     sess = Session()
     app.secret_key = os.getenv("SECRET_KEY")
     app.config['SESSION_TYPE'] = 'filesystem'
     sess.init_app(app)
-    boolean_val = bool(os.getenv("disable_login"))
-    app.config["LOGIN_DISABLED"]= boolean_val
-    app.config.from_object(Config)
     username=os.getenv("MONGO_USER")
     password=os.getenv("MONGO_PASSWORD")
     url=os.getenv("MONGO_URL")
@@ -39,6 +37,8 @@ def create_app():
     todos = mongo.MyDatabase[collection]
     _DEFAULT_ITEMS = []
     itemDict = []
+    if os.getenv("disable_login")=='True':
+        app.config["LOGIN_DISABLED"]=True
 
     def check_role(func):
         def wrapper_function(*args, **kwargs):
@@ -144,11 +144,6 @@ def create_app():
             return redirect("/")
         else:
             return "Error logging in."   
-    
-    @app.route('/logout', methods=['GET'])
-    def logout():
-        logout_user()
-        return "Successfully logged out."
 
     login_manager = LoginManager()
 
