@@ -1,14 +1,15 @@
 from bson.objectid import ObjectId
 from flask import Flask, redirect, url_for, render_template, request
-from flask_login import LoginManager,login_required, login_user, UserMixin, current_user
+from flask_login import LoginManager,login_required, login_user, current_user, logout_user
 from oauthlib.oauth2 import WebApplicationClient
+from flask_session import Session
 import os
 import requests
 import datetime
 from bson.json_util import dumps
 from bson.json_util import loads
 from todo_app.flask_config import Config
-from todo_app.classModels import Item, ViewModel
+from todo_app.classModels import Item, ViewModel, User
 import pymongo
 
 client_id = os.getenv("client_id")
@@ -17,8 +18,13 @@ client = WebApplicationClient(client_id)
 
 def create_app():
     app = Flask(__name__)
+    sess = Session()
+    app.secret_key = os.getenv("SECRET_KEY")
+    app.config['SESSION_TYPE'] = 'filesystem'
+    sess.init_app(app)
+    boolean_val = eval(os.getenv("disable_login"))
+    app.config["LOGIN_DISABLED"]= boolean_val
     app.config.from_object(Config)
-    app.config['LOGIN_DISABLED']=True
     username=os.getenv("MONGO_USER")
     password=os.getenv("MONGO_PASSWORD")
     url=os.getenv("MONGO_URL")
@@ -34,10 +40,19 @@ def create_app():
     _DEFAULT_ITEMS = []
     itemDict = []
 
+    def check_role(func):
+        def wrapper_function(*args, **kwargs):
+            if 'writer' in current_user.roles:
+                return func(*args, **kwargs)
+        wrapper_function.__name__ = func.__name__
+        return wrapper_function
+
     @app.route('/items', methods=["GET", "PATCH"])
     @app.route('/', methods=["GET", "PATCH"])
     @login_required
     def index():
+        if (os.getenv("disable_login")=='True'):
+            login_user(User("Testing"))
         items = get_cards()
         item_view_model = ViewModel(items)
         return render_template('index.html',view_model=item_view_model)
@@ -111,6 +126,7 @@ def create_app():
                 _DEFAULT_ITEMS.append(item)
         return _DEFAULT_ITEMS
     
+    
     @app.route('/login/', methods=["GET", "POST"])
     def login():
         code = request.args.get('code')
@@ -121,54 +137,34 @@ def create_app():
         }
         response = requests.post("https://github.com/login/oauth/access_token",request_body,headers={"Accept": "application/json"})
         parsed = client.parse_request_body_response(response.content)
-        access_token= parsed["access_token"]
-        raw_user = requests.get("https://api.github.com/user",headers={"Authorization": "token {0}".format(access_token)}).json()
-        user = login_user(User(raw_user["login"]))
-        return redirect("/")
+        access_token = parsed["access_token"]
+        github_user = requests.get("https://api.github.com/user",headers={"Authorization": "token {0}".format(access_token)}).json()
+        user = load_user(github_user["login"])
+        if login_user(user):
+            return redirect("/")
+        else:
+            return "Error logging in."   
+    
+    @app.route('/logout', methods=['GET'])
+    def logout():
+        logout_user()
+        return "Successfully logged out."
+
+    login_manager = LoginManager()
+
+    @login_manager.unauthorized_handler
+    def unauthenticated():
+        login_manager.login_view='auth.login'
+        url = client.prepare_request_uri('https://github.com/login/oauth/authorize', redirect_uri='http://127.0.0.1:5000/login/')
+        return redirect(url) 
+
+    @login_manager.user_loader
+    def load_user(user_id):
+        return User(user_id)
 
     login_manager.init_app(app)
+
     return app
-
-login_manager = LoginManager()
-@login_manager.unauthorized_handler
-def unauthenticated():
-    login_manager.login_view='auth.login'
-    url = client.prepare_request_uri('https://github.com/login/oauth/authorize', redirect_uri='http://127.0.0.1:5000/login/')
-    return redirect(url) 
-@login_manager.user_loader
-def load_user(user_id):
-    return User(user_id)
-
-def check_role(func):
-    def wrapper_function(*args, **kwargs):
-        if current_user.is_authenticated:
-            if 'writer' in current_user.roles:
-                result = func(*args, **kwargs)
-                return result
-    wrapper_function.__name__ = func.__name__
-    return wrapper_function
-
-class User(UserMixin):
-    def __init__(self, id):
-        self.id = id
-        self.role = set()
-        self.role.add('writer')
-    
-    def get_id(self):
-        return self.id
-    
-    def is_active(self):
-        return True
-
-    def is_anonymous(self):
-        return False
-
-    def is_authenticated(self):
-        return True
-    
-    @property
-    def roles(self):
-        return self.role
 
 if __name__ == '__main__':
     create_app.run()

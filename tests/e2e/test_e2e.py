@@ -2,34 +2,29 @@ import pytest
 from selenium import webdriver
 from threading import Thread
 from todo_app import app
-from dotenv import load_dotenv, find_dotenv   
+from dotenv import load_dotenv  
 import time
 import os
 import pymongo
 
 @pytest.fixture(scope='module')
 def test_app():
-       file_path = find_dotenv('.env')
-       load_dotenv(file_path, override=True)
-       db = create_collection()
-       database = db.MyDatabase
-       application = app.create_app()
-       thread = Thread(target=lambda: application.run(use_reloader=False))
-       thread.daemon = True
-       thread.start()
-       yield app
-       thread.join(1)
-       database.testCollection.drop()
+    load_dotenv('.env', override=True)
+    db = create_collection()
+    database = db.MyDatabase
+    os.environ["disable_login"]='True'
+    application = app.create_app()
+    thread = Thread(target=lambda: application.run(use_reloader=False))
+    thread.daemon = True
+    thread.start()
+    yield app
+    thread.join(1)
+    database.testCollection.drop()
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def driver():
-    opts = webdriver.ChromeOptions()
-    opts.add_argument('--headless')
-    opts.add_argument('--no-sandbox')
-    opts.add_argument('--disable-dev-shm-usage')
-    with webdriver.Chrome(options=opts) as driver:
+    with webdriver.Firefox() as driver:
         yield driver
-        driver.close()
 
 def testDriver(test_app,driver):
     driver.get('http://127.0.0.1:5000/')

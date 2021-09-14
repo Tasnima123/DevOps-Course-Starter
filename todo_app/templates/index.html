@@ -5,6 +5,9 @@
   <div class="jumbotron">
     <h1 class="display-4">To-Do App</h1>
     <p class="lead">Just another to-do app.</p>
+    {% if current_user.is_authenticated %}
+    <p>Welcome {{ current_user.id }}</p>
+    {% endif %}
   </div>
 {% if 'writer' in current_user.roles %}
   <form action="{{ url_for('add') }}" method="POST">

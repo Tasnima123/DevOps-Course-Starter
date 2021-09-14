@@ -5,7 +5,7 @@ import os
 import mongomock
 from todo_app import app   
 from todo_app.classModels import ViewModel
-
+from flask_login import LoginManager
 
 sample_cards_response = {"_id": 3, "title": "testTitle", "status": "To Do", "DateUpdated": "2020-11-18T18:43:33.434Z"}
 
