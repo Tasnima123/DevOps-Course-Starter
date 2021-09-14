@@ -22,8 +22,6 @@ def create_app():
     app.secret_key = os.getenv("SECRET_KEY")
     app.config['SESSION_TYPE'] = 'filesystem'
     sess.init_app(app)
-    boolean_val = bool(os.getenv("disable_login"))
-    app.config["LOGIN_DISABLED"]= boolean_val
     app.config.from_object(Config)
     username=os.getenv("MONGO_USER")
     password=os.getenv("MONGO_PASSWORD")
@@ -52,6 +50,7 @@ def create_app():
     @login_required
     def index():
         if (os.getenv("disable_login")=='True'):
+            app.config['LOGIN_DISABLED'] = True
             login_user(User("Testing"))
         items = get_cards()
         item_view_model = ViewModel(items)
