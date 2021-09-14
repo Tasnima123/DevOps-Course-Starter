@@ -48,6 +48,8 @@ As this app is registered on Github for authentication, additition values are ne
 * `client_id`
 * `client_secret`
 
+The following variable is changed during Testing, to prevent the 'login_required' decorator from redirecting in tests.
+* `disable_login=False`
 
 ## Running the App
 
