@@ -14,6 +14,7 @@ def client():
        load_dotenv('.env.test', override=True)
        url = os.getenv("MONGO_URL")
        with mongomock.patch(servers=((url,27017),)):
+              os.environ["disable_login"]='True'
               test_app = app.create_app()
               with test_app.test_client() as client:
                      yield client

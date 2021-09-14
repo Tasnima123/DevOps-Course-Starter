@@ -22,7 +22,7 @@ def create_app():
     app.secret_key = os.getenv("SECRET_KEY")
     app.config['SESSION_TYPE'] = 'filesystem'
     sess.init_app(app)
-    boolean_val = eval(os.getenv("disable_login"))
+    boolean_val = bool(os.getenv("disable_login"))
     app.config["LOGIN_DISABLED"]= boolean_val
     app.config.from_object(Config)
     username=os.getenv("MONGO_USER")

@@ -30,7 +30,6 @@ def driver():
     with webdriver.Chrome('/usr/local/bin/chromedriver', options=opts) as driver:
         yield driver
     
-
 def testDriver(test_app,driver):
     driver.get('http://127.0.0.1:5000/')
     assert driver.title == 'To-Do App'
