@@ -47,6 +47,7 @@ Other values that we need for .env:
 As this app is registered on Github for authentication, additition values are needed for .env:
 * `client_id`
 * `client_secret`
+* `redirect_uri`
 
 The following variable is changed only during testing. This is to prevent the 'login_required' decorator from redirecting in tests.
 * `disable_login=False`

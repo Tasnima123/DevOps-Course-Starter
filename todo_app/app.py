@@ -14,6 +14,7 @@ import pymongo
 
 client_id = os.getenv("client_id")
 client_secret = os.getenv("client_secret")
+redirect_uri_value = os.getenv("redirect_uri")
 client = WebApplicationClient(client_id)
 
 def create_app():
@@ -150,7 +151,7 @@ def create_app():
     @login_manager.unauthorized_handler
     def unauthenticated():
         login_manager.login_view='auth.login'
-        url = client.prepare_request_uri('https://github.com/login/oauth/authorize', redirect_uri='http://127.0.0.1:5000/login/')
+        url = client.prepare_request_uri('https://github.com/login/oauth/authorize', redirect_uri=redirect_uri_value)
         return redirect(url) 
 
     @login_manager.user_loader
