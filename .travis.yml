@@ -5,7 +5,7 @@ before_install:
 - docker build --target test --tag my-test-image .
 script:
 - docker run --env-file .env.test my-test-image tests/int_unit
-- docker run -e FLASK_APP=todo_app/app -e FLASK_ENV=development -e FLASK_SKIP_DOTENV=True -e MONGO_URL -e MONGO_USER -e MONGO_PASSWORD -e MONGO_DB -e MONGO_PROTOCOL -e MONGO_COLLECTION -e client_id -e client_secret my-test-image -e disable_login=False -e redirect_uri tests/e2e
+- docker run -e FLASK_APP=todo_app/app -e FLASK_ENV=development -e FLASK_SKIP_DOTENV=True -e MONGO_URL -e MONGO_USER -e MONGO_PASSWORD -e MONGO_DB -e MONGO_PROTOCOL -e MONGO_COLLECTION -e client_id -e client_secret -e disable_login=False -e redirect_uri my-test-image tests/e2e
 - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 - docker build --target production --tag $DOCKER_USERNAME/my-test-image:latest .
 - docker push $DOCKER_USERNAME/my-test-image:latest
