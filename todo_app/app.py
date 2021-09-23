@@ -11,6 +11,7 @@ from bson.json_util import loads
 from todo_app.flask_config import Config
 from todo_app.classModels import Item, ViewModel, User
 import pymongo
+from werkzeug.exceptions import Forbidden
 
 client_id = os.getenv("client_id")
 client_secret = os.getenv("client_secret")
@@ -45,6 +46,8 @@ def create_app():
         def wrapper_function(*args, **kwargs):
             if 'writer' in current_user.roles:
                 return func(*args, **kwargs)
+            else:
+                raise Forbidden("Writer role required")
         wrapper_function.__name__ = func.__name__
         return wrapper_function
 
