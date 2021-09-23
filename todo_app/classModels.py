@@ -1,4 +1,5 @@
 import datetime
+from flask_login import UserMixin
 
 class Item:
         def __init__(self, id, title, status, date):
@@ -73,3 +74,25 @@ class ViewModel:
         @property
         def older_done_items(self): 
             return self._olderDone
+
+class User(UserMixin):
+    def __init__(self, id, active=True):
+        self.id = id
+        self.role = set()
+        self.role.add('writer')
+    
+    def get_id(self):
+        return self.id
+    
+    def is_active(self):
+        return True
+
+    def is_anonymous(self):
+        return False
+
+    def is_authenticated(self):
+        return True
+    
+    @property
+    def roles(self):
+        return self.role

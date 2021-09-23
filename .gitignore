@@ -124,3 +124,5 @@ geckodriver.log
 .vagrant
 
 logs.txt
+
+flask_session/

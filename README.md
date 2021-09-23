@@ -44,6 +44,14 @@ Other values that we need for .env:
 * `MONGO_PROTOCOL`= MongoDB protocol (e.g. 'mongodb+srv://')
 * `MONGO_COLLECTION`= MongoDB collection
 
+As this app is registered on Github for authentication, additition values are needed for .env:
+* `client_id`
+* `client_secret`
+* `redirect_uri`
+
+The following variable is changed only during testing. This is to prevent the 'login_required' decorator from redirecting in tests.
+* `disable_login=False`
+
 ## Running the App
 
 ### With Poetry and Flask
