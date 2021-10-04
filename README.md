@@ -44,13 +44,16 @@ Other values that we need for .env:
 * `MONGO_PROTOCOL`= MongoDB protocol (e.g. 'mongodb+srv://')
 * `MONGO_COLLECTION`= MongoDB collection
 
-As this app is registered on Github for authentication, additition values are needed for .env:
+As this app is registered on Github for authentication, additition values are needed for .env. These values can be will be known after creating an [OAuth App](https://docs.github.com/en/developers/apps/building-oauth-apps/creating-an-oauth-app) on GitHub:
 * `client_id`
 * `client_secret`
 * `redirect_uri`
 
 The following variable is changed only during testing. This is to prevent the 'login_required' decorator from redirecting in tests.
 * `disable_login=False`
+
+In order to connect the app to the CosmosDB, the following variable needs to be passed in as an environment variable. This can be found through CLI or through the Azure Portal.
+* `CONNECTION_STRING`
 
 ## Running the App
 
@@ -151,9 +154,9 @@ If not in poetry env:
 
 ## Continuous Deployment
 
-This app is deployed on Heroku. 
-You can then visit this link [here](https://devops-project-app.herokuapp.com/) in your web browser to view the app.
+This app is deployed on Heroku and Azure.
+You can then visit this link [here](https://devops-project-app.herokuapp.com/) in your web browser to view the app on Heroku, and this link [here](https://devops-project.azurewebsites.net/) through Azure.
 
 The Travis CI:
-* automatically builds and deploys the main branch to Heroku
+* automatically builds and deploys the main branch
 * publishes the Docker images to Docker Hub

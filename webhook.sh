@@ -4,3 +4,4 @@
 - docker tag $DOCKER_USERNAME/my-test-image registry.heroku.com/devops-project-app/web
 - docker push registry.heroku.com/devops-project-app/web
 - heroku container:release web -a devops-project-app
+- curl -dH -X POST "$WEBHOOK_URL"
