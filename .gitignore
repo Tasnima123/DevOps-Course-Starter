@@ -126,3 +126,13 @@ geckodriver.log
 logs.txt
 
 flask_session/
+
+.terraform.lock.hcl
+
+.terraform/
+
+.terraform.tfstate.lock.info
+
+terraform.tfstate
+
+terraform.tfstate.backup
