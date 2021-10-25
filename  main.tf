@@ -8,7 +8,7 @@ terraform {
 }
 provider "azurerm" {
     features {}
-    }
+}
 data "azurerm_resource_group" "main" {
     name = "CreditSuisse2_TasnimaMiah_ProjectExercise"
 }
@@ -29,10 +29,29 @@ resource "azurerm_app_service" "main" {
     resource_group_name = data.azurerm_resource_group.main.name
     app_service_plan_id = azurerm_app_service_plan.main.id
     site_config {
-    app_command_line = ""
-    linux_fx_version = "DOCKER|appsvcsample/python-helloworld:latest"
+        app_command_line = ""
+        linux_fx_version = "DOCKER| tasnimamiah/my-test-image:latest"
     }
     app_settings = {
         "DOCKER_REGISTRY_SERVER_URL" = "https://index.docker.io"
+        "MONGODB_CONNECTION_STRING" = <<EOT
+        "mongodb://
+        ${data.azurerm_cosmosdb_account.main.name}:
+        ${data.azurerm_cosmosdb_account.main.primary_key}@
+        ${data.azurerm_cosmosdb_account.main.name}.mongo.cosmos.azure.com:10255/DefaultDatabase?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000"
+        EOT
     }
+
+}
+
+data "azurerm_cosmosdb_account" "main" {
+  name = "tasnimamiah"
+  resource_group_name = "CreditSuisse2_TasnimaMiah_ProjectExercise"
+}
+
+resource "azurerm_cosmosdb_mongo_database" "main" {
+    name = "project_exercise"
+    resource_group_name = data.azurerm_cosmosdb_account.main.resource_group_name
+    account_name = data.azurerm_cosmosdb_account.main.name
+    capabilities { name = "EnableServerless" }
 }
