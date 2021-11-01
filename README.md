@@ -53,7 +53,7 @@ The following variable is changed only during testing. This is to prevent the 'l
 * `disable_login=False`
 
 In order to connect the app to the CosmosDB, the following variable needs to be passed in as an environment variable. This can be found through CLI or through the Azure Portal.
-* `CONNECTION_STRING`
+* `MONGODB_CONNECTION_STRING`
 
 ## Running the App
 

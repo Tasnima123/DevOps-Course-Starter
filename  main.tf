@@ -30,28 +30,42 @@ resource "azurerm_app_service" "main" {
     app_service_plan_id = azurerm_app_service_plan.main.id
     site_config {
         app_command_line = ""
-        linux_fx_version = "DOCKER| tasnimamiah/my-test-image:latest"
+        linux_fx_version = "DOCKER|tasnimamiah/my-test-image:latest"
     }
     app_settings = {
         "DOCKER_REGISTRY_SERVER_URL" = "https://index.docker.io"
-        "MONGODB_CONNECTION_STRING" = <<EOT
-        "mongodb://
-        ${data.azurerm_cosmosdb_account.main.name}:
-        ${data.azurerm_cosmosdb_account.main.primary_key}@
-        ${data.azurerm_cosmosdb_account.main.name}.mongo.cosmos.azure.com:10255/DefaultDatabase?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000"
-        EOT
+        "WEBSITES_PORT" = 5000
+        "MONGODB_CONNECTION_STRING" = "mongodb://${azurerm_cosmosdb_account.tasnimamiah.name}:${azurerm_cosmosdb_account.tasnimamiah.primary_key}@${azurerm_cosmosdb_account.tasnimamiah.name}.mongo.cosmos.azure.com:10255/DefaultDatabase?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000"
     }
-
 }
 
-data "azurerm_cosmosdb_account" "main" {
+resource "azurerm_cosmosdb_account" "tasnimamiah" {
   name = "tasnimamiah"
   resource_group_name = "CreditSuisse2_TasnimaMiah_ProjectExercise"
+  offer_type = "Standard"
+  kind = "MongoDB"
+  location = "UK South"
+
+  geo_location {
+    location = "UK South"
+    failover_priority = 0
+  }
+  consistency_policy {
+    consistency_level  = "Session"
+    max_interval_in_seconds = 5
+    max_staleness_prefix = 100
+  }
+  capabilities {
+    name = "EnableServerless"
+  }
+   capabilities {
+    name = "EnableMongo"
+  }
 }
 
 resource "azurerm_cosmosdb_mongo_database" "main" {
     name = "project_exercise"
-    resource_group_name = data.azurerm_cosmosdb_account.main.resource_group_name
-    account_name = data.azurerm_cosmosdb_account.main.name
-    capabilities { name = "EnableServerless" }
+    resource_group_name = azurerm_cosmosdb_account.tasnimamiah.resource_group_name
+    account_name = azurerm_cosmosdb_account.tasnimamiah.name
+    lifecycle { prevent_destroy = true } 
 }
