@@ -11,7 +11,10 @@ import pymongo
 def test_app():
     load_dotenv('.env', override=True)
     connection = create_collection()
-    database = connection.get_database()
+    try:
+        database = connection.get_database()
+    except pymongo.errors.ConfigurationError:
+        database = connection.get_database("project_exercise")
     os.environ["disable_login"]='True'
     application = app.create_app()
     thread = Thread(target=lambda: application.run(use_reloader=False))

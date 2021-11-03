@@ -44,6 +44,7 @@ resource "azurerm_app_service" "main" {
         "FLASK_APP"="todo_app/app"
         "FLASK_ENV"="development"
         "FLASK_SKIP_DOTENV"="True"
+        "MONGO_URL"="cluster0.fake.mongodb.net"
     }
 }
 
@@ -83,4 +84,10 @@ resource "azurerm_cosmosdb_mongo_collection" "main" {
   resource_group_name = azurerm_cosmosdb_account.tasnimamiah.resource_group_name
   account_name        = azurerm_cosmosdb_account.tasnimamiah.name
   database_name       = azurerm_cosmosdb_mongo_database.main.name
+  index {
+      keys = [
+        "_id"
+      ]
+      unique = true
+  }
 }

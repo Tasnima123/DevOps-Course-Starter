@@ -18,6 +18,9 @@ client_secret = os.getenv("client_secret")
 redirect_uri_value = os.getenv("redirect_uri")
 client = WebApplicationClient(client_id)
 
+def mongo_connection(): 
+    return pymongo.MongoClient(os.getenv("MONGODB_CONNECTION_STRING"))
+
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)

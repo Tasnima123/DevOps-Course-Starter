@@ -5,16 +5,14 @@ import os
 import mongomock
 from todo_app import app   
 from todo_app.classModels import ViewModel
-from flask_login import LoginManager
 
-sample_cards_response = {"_id": 3, "title": "testTitle", "status": "To Do", "DateUpdated": "2020-11-18T18:43:33.434Z"}
+sample_cards_response = {"id": 1, "title": "testTitle", "status": "To Do", "DateUpdated": "2020-11-18T18:43:33.434Z"}
 
 @pytest.fixture
 def client():
        load_dotenv('.env.test', override=True)
-       url = os.getenv("MONGO_URL")
        os.environ["disable_login"]='True'
-       with mongomock.patch(servers=((url,27017),)):
+       with mongomock.patch(servers=(("test.mongo.cosmos.azure.com",10255),)):
               test_app = app.create_app()
               with test_app.test_client() as client:
                      yield client
@@ -32,10 +30,17 @@ def test_viewModel():
        assert len(view_model.show_all_done_items) == 1
 
 def mongo_setup():
-       connection_string=os.getenv("MONGODB_CONNECTION_STRING")
-       pymongo.MongoClient(connection_string)
-       todos = []
-       todos.append(sample_cards_response)
+       collection=os.getenv("MONGO_COLLECTION")
+       mongo_val = pymongo.MongoClient(os.getenv("MONGODB_CONNECTION_STRING"))
+       try:
+        db_name = mongo_val.get_database()
+       except pymongo.errors.ConfigurationError:
+              db_name = mongo_val.get_database("project_exercise")
+       collections = db_name.list_collection_names()
+       if collection not in collections:
+              todos = db_name[collection]
+       todos = db_name[collection]
+       todos.insert_one(sample_cards_response)
 
 def test_index_page(client):
        mongo_setup()
