@@ -32,13 +32,8 @@ def test_viewModel():
        assert len(view_model.show_all_done_items) == 1
 
 def mongo_setup():
-       username=os.getenv("MONGO_USER")
-       password=os.getenv("MONGO_PASSWORD")
-       database=os.getenv("MONGO_DB")
-       url=os.getenv("MONGO_URL")
-       protocol=os.getenv("MONGO_PROTOCOL")
-       MONGO_URI="{0}{1}:{2}@{3}/{4}?retryWrites=true&w=majority".format(protocol,username,password,url,database)
-       db=pymongo.MongoClient(MONGO_URI)
+       connection_string=os.getenv("MONGODB_CONNECTION_STRING")
+       pymongo.MongoClient(connection_string)
        todos = []
        todos.append(sample_cards_response)
 

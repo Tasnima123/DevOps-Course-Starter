@@ -10,8 +10,8 @@ import pymongo
 @pytest.fixture(scope='module')
 def test_app():
     load_dotenv('.env', override=True)
-    db = create_collection()
-    database = db.MyDatabase
+    connection = create_collection()
+    database = connection.get_database()
     os.environ["disable_login"]='True'
     application = app.create_app()
     thread = Thread(target=lambda: application.run(use_reloader=False))
@@ -75,16 +75,11 @@ def test_moveDone(test_app,driver):
     assert "Selenium_test" in value.text
 
 def create_collection():
-    username = os.getenv("MONGO_USER")
-    password = os.getenv("MONGO_PASSWORD")
-    url = os.getenv("MONGO_URL")
-    protocol = os.getenv("MONGO_PROTOCOL")
-    database = os.getenv("MONGO_DB")
-    MONGO_URI = str(protocol+username+":"+password+"@"+url+"/"+database+"?retryWrites=true&w=majority")
-    db = pymongo.MongoClient(MONGO_URI)
+    connection_string=os.getenv("MONGODB_CONNECTION_STRING")
+    connection=pymongo.MongoClient(connection_string)
     new_collection = 'testCollection'
     os.environ["MONGO_COLLECTION"]=new_collection
-    return db
+    return connection
 
 
 

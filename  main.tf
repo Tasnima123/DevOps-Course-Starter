@@ -34,8 +34,16 @@ resource "azurerm_app_service" "main" {
     }
     app_settings = {
         "DOCKER_REGISTRY_SERVER_URL" = "https://index.docker.io"
-        "WEBSITES_PORT" = 5000
         "MONGODB_CONNECTION_STRING" = "mongodb://${azurerm_cosmosdb_account.tasnimamiah.name}:${azurerm_cosmosdb_account.tasnimamiah.primary_key}@${azurerm_cosmosdb_account.tasnimamiah.name}.mongo.cosmos.azure.com:10255/DefaultDatabase?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000"
+        "SECRET_KEY"="secret-key"
+        "MONGO_COLLECTION"="todos"
+        "client_id"="149a204bad324451e17f"
+        "client_secret"="b7d42ea28a3414dca6a9491c7df8b1b783a032ee"
+        "disable_login=False"
+        "redirect_uri"="http://127.0.0.1:5000/login/"
+        "FLASK_APP"="todo_app/app"
+        "FLASK_ENV=development"
+        "FLASK_SKIP_DOTENV"="True"
     }
 }
 
