@@ -18,6 +18,11 @@ client_secret = os.getenv("client_secret")
 redirect_uri_value = os.getenv("redirect_uri")
 client = WebApplicationClient(client_id)
 
+def mongo_connection(protocol,username,password,url,database):
+    if os.getenv("CONNECTION_STRING"):
+        return pymongo.MongoClient(os.getenv("CONNECTION_STRING"))
+    return pymongo.MongoClient("{0}{1}:{2}@{3}/{4}?retryWrites=true&w=majority".format(protocol,username,password,url,database))
+
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
@@ -31,8 +36,7 @@ def create_app():
     database=os.getenv("MONGO_DB")
     protocol=os.getenv("MONGO_PROTOCOL")
     collection=os.getenv("MONGO_COLLECTION")
-    MONGO_URI="{0}{1}:{2}@{3}/{4}?retryWrites=true&w=majority".format(protocol,username,password,url,database)
-    mongo = pymongo.MongoClient(MONGO_URI)
+    mongo = mongo_connection(protocol,username,password,url,database)
     collections = mongo.MyDatabase.list_collection_names()
     if collection not in collections:
         todos = mongo.MyDatabase[collection]
