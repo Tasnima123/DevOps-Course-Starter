@@ -34,14 +34,7 @@ $ cp .env.template .env  # (first time only)
 
 The `.env` file is used by flask to set environment variables when running `flask run`. This enables things like development mode (which also enables features like hot reloading when you make a file change). There's also a [SECRET_KEY](https://flask.palletsprojects.com/en/1.1.x/config/#SECRET_KEY) variable which is used to encrypt the flask session cookie.\'
 
-You will need to create a free cluster using [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) if you do not have one already.
-
 Other values that we need for .env:
-* `MONGO_URL`= URL for MongoDB cluster
-* `MONGO_USER`= MongoDB username
-* `MONGO_PASSWORD`= MongoDB password
-* `MONGO_DB`= MongoDB database
-* `MONGO_PROTOCOL`= MongoDB protocol (e.g. 'mongodb+srv://')
 * `MONGO_COLLECTION`= MongoDB collection
 
 As this app is registered on Github for authentication, additition values are needed for .env. These values can be will be known after creating an [OAuth App](https://docs.github.com/en/developers/apps/building-oauth-apps/creating-an-oauth-app) on GitHub:
@@ -154,8 +147,8 @@ If not in poetry env:
 
 ## Continuous Deployment
 
-This app is deployed on Heroku and Azure.
-You can then visit this link [here](https://devops-project-app.herokuapp.com/) in your web browser to view the app on Heroku, and this link [here](https://devops-project.azurewebsites.net/) through Azure.
+This app is deployed on Azure.
+You can then visit this link [here](https://devops-todo-app.azurewebsites.net) in your web browser to view the app on Azure.
 
 The Travis CI:
 * automatically builds and deploys the main branch
