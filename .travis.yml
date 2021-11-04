@@ -1,6 +1,7 @@
 language: generic
 services:
 - docker
+- mongodb
 before_install:
 - docker build --target test --tag my-test-image .
 script:
