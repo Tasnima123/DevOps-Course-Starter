@@ -44,7 +44,6 @@ resource "azurerm_app_service" "main" {
         "FLASK_APP"="todo_app/app"
         "FLASK_ENV"="development"
         "FLASK_SKIP_DOTENV"="True"
-        "MONGO_URL"="cluster0.fake.mongodb.net"
     }
 }
 
