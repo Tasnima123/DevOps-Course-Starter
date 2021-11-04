@@ -11,7 +11,9 @@ script:
 deploy:
   provider: script
   script: bash webhook.sh
-  edge: true
+  on:
+    all_branches: true
+  
 env:
   global:
   - secure: y1nfDSfF3/+vTpk32GC771VY7mcBz84DH7qDlJRzr7TtKSL0/Ya8XhBgmsu5FZ4buwSrzc3Ua3r9t8SyXXC7tCXO4S+eYlIDmq8do9XK0Np+4GNqERuNqY+fq6pDxJHf3SL3n7U/U5L97uJKAOXyCjSDOTlDOTJ9fgf8BZ7nxYCwu+4Xzc5VYN7hNde/GWeAUaiSxPBPnziNBVW+JwJqoafOjMGo1SAFxp4tl16SZLZbpSigF+iTeLF2w80ZNdqgmkiH7SY2Jv8nART7DnkifCTL68PBz95AX3sbUjCHGxU61NS7IJBMxeYbQGbjZIQFJH0c2MqfCsV1Qqc5KicVMkqAvjvIFmpuz1FVWVyfbn+QAUzX9fqvzxK0ViT8Y62Zw4kd7EQwL9VzWXlqNYUAI1uAvEqp0YZLyioFZzd5w5UrYKzf0jNau0duOm/ShN+ggbhZ/LpkogahCuQrwkFPpk4SNevkdvk8yIWZgjnGPATgxD25C2wGStH+es7jwxfrT1oQSGvPmIVkkMq7HdZ56KB/uvSJK28zwLFmYgvzZK28zlST5W0Fhhs6CDNG57GvqE0obTtDE83bLfxYw++lKnzOvgMiJboJM4YdZj9gDr4smjpoEDwOXh6po4Nu4+uLKOsf6R8A0bQtFjBrWVGN93abJV/U+SyDlcSvIVSxuAQ=
