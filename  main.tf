@@ -30,7 +30,7 @@ resource "azurerm_app_service" "main" {
     app_service_plan_id = azurerm_app_service_plan.main.id
     site_config {
         app_command_line = ""
-        linux_fx_version = "DOCKER|docker.io/tasnimamiah/my-test-image:latest"
+        linux_fx_version = "DOCKER|tasnimamiah/my-test-image:latest"
     }
     app_settings = {
         "DOCKER_REGISTRY_SERVER_URL" = "https://index.docker.io"
