@@ -37,8 +37,8 @@ resource "azurerm_app_service" "main" {
         "MONGODB_CONNECTION_STRING" = "mongodb://${azurerm_cosmosdb_account.tasnimamiah.name}:${azurerm_cosmosdb_account.tasnimamiah.primary_key}@${azurerm_cosmosdb_account.tasnimamiah.name}.mongo.cosmos.azure.com:10255/DefaultDatabase?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@tasnimamiah@"
         "SECRET_KEY"="secret-key"
         "MONGO_COLLECTION"="todos"
-        "client_id"="a45ffa103c2c613d4b45"
-        "client_secret"="73f53a84436db60ac15cbe67a747a6498a12d384"
+        "client_id"=var.client_id
+        "client_secret"=var.client_secret
         "disable_login"="False"
         "redirect_uri"="https://devops-todo-app.azurewebsites.net/login/"
         "FLASK_APP"="todo_app/app"
@@ -55,7 +55,7 @@ resource "azurerm_cosmosdb_account" "tasnimamiah" {
   location = "UK South"
 
   geo_location {
-    location = "UK South"
+    location = var.location
     failover_priority = 0
   }
   consistency_policy {
