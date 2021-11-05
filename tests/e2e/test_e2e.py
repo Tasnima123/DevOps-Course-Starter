@@ -26,15 +26,12 @@ def test_app():
 
 @pytest.fixture(scope="module")
 def driver():
-    # opts = webdriver.ChromeOptions()
-    # opts.add_argument('--headless')
-    # opts.add_argument('--no-sandbox')
-    # opts.add_argument('--disable-dev-shm-usage')
-    # with webdriver.Chrome('/usr/local/bin/chromedriver', options=opts) as driver:
-    #     yield driver
-    with webdriver.Firefox() as driver:
+    opts = webdriver.ChromeOptions()
+    opts.add_argument('--headless')
+    opts.add_argument('--no-sandbox')
+    opts.add_argument('--disable-dev-shm-usage')
+    with webdriver.Chrome('/usr/local/bin/chromedriver', options=opts) as driver:
         yield driver
-
     
 def testDriver(test_app,driver):
     driver.get('http://127.0.0.1:5000/')
