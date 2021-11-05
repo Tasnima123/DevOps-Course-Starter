@@ -5,7 +5,7 @@ before_install:
 - docker build --target test --tag my-test-image .
 script:
 - docker run --env-file .env.test my-test-image tests/int_unit
-- docker run -e FLASK_APP=todo_app/app -e FLASK_ENV=development -e SECRET_KEY=secret_key -e FLASK_SKIP_DOTENV=True -e MONGO_COLLECTION=todos -e WEBHOOK_URL -e client_id -e client_secret -e disable_login=False -e redirect_uri -e MONGODB_CONNECTION_STRING='mongodb://tasnimamiah:23i9JNvICJHPoG0fhlzOHdUtFP6KAPc6EqbvYXHvhyzYN9RJlrF18pu4c1hcXhqTCPY5w1APNjxSIMEsDvrO5Q==@tasnimamiah.mongo.cosmos.azure.com:10255/?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@tasnimamiah@' my-test-image tests/e2e
+- docker run -e FLASK_APP=todo_app/app -e FLASK_ENV=development -e SECRET_KEY=secret_key -e FLASK_SKIP_DOTENV=True -e MONGO_COLLECTION=todos -e WEBHOOK_URL -e client_id -e client_secret -e disable_login=False -e redirect_uri -e MONGODB_CONNECTION_STRING='mongodb://tasnimamiah:nAL7d1Pxfv2l1SXXOhdqhN4YBMijIBYohCMR6RgX70tbTRCjMRIE5Yr7jD0ukpHVwmXJYs9v9HkBZAEjszzxLQ==@tasnimamiah.mongo.cosmos.azure.com:10255/?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@tasnimamiah@' my-test-image tests/e2e
 - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 - docker build --target production --tag $DOCKER_USERNAME/my-test-image:latest .
 deploy:
