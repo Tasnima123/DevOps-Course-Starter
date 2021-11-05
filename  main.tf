@@ -4,11 +4,37 @@ terraform {
             source = "hashicorp/azurerm"
             version = ">= 2.49"
             }
-        }
+    }
+        backend "azurerm" {
+        resource_group_name  = "CreditSuisse2_TasnimaMiah_ProjectExercise"
+        storage_account_name = "tfstatewqs"
+        container_name       = "tfstate"
+        key                  = "terraform.tfstate"
+    }
 }
 provider "azurerm" {
     features {}
 }
+
+resource "azurerm_storage_account" "tfstate" {
+  name                     = "tfstatewqs"
+  resource_group_name      = data.azurerm_resource_group.main.name
+  location                 = var.location
+  account_tier             = "Standard"
+  account_replication_type = "LRS"
+  allow_blob_public_access = true
+
+  tags = {
+    environment = "staging"
+  }
+}
+
+resource "azurerm_storage_container" "tfstate" {
+  name                  = "tfstate"
+  storage_account_name  = azurerm_storage_account.tfstate.name
+  container_access_type = "blob"
+}
+
 data "azurerm_resource_group" "main" {
     name = "CreditSuisse2_TasnimaMiah_ProjectExercise"
 }
