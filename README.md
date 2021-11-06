@@ -153,3 +153,4 @@ You can then visit this link [here](https://devops-todo-app.azurewebsites.net) i
 The Travis CI:
 * automatically builds and deploys the main branch
 * publishes the Docker images to Docker Hub
+* update the Terraform resources before deploy
