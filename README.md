@@ -151,6 +151,6 @@ This app is deployed on Azure.
 You can then visit this link [here](https://devops-todo-app.azurewebsites.net) in your web browser to view the app on Azure.
 
 The Travis CI:
-* automatically builds and deploys the main branch
+* automatically builds and deploys the branch to Azure
 * publishes the Docker images to Docker Hub
 * update the Terraform resources before deploy
