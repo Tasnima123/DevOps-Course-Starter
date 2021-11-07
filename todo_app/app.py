@@ -54,7 +54,7 @@ def create_app():
             if 'writer' in current_user.roles:
                 return func(*args, **kwargs)
             else:
-                logging.error('User does not have writer role enabled')
+                app.logger.error('User does not have writer role enabled')
                 raise Forbidden("Writer role required")
         wrapper_function.__name__ = func.__name__
         return wrapper_function
@@ -84,7 +84,7 @@ def create_app():
             item["title"]=request.form.get('itemTitle')
             item["status"]=request.form.get('itemStatus')
             save_card(item)
-            logging.info("%s has been edited", request.form.get('itemTitle'))
+            app.logger.info("%s has been edited", request.form.get('itemTitle'))
             return redirect(url_for('get', id = item["id"]))
         return render_template('edit.html', item = item)
 
@@ -94,7 +94,7 @@ def create_app():
     def add():
         title = request.form.get('itemTitle')
         add_card(title)
-        logging.info("%s has been added", request.form.get('itemTitle'))
+        app.logger.info("%s has been added", request.form.get('itemTitle'))
         return redirect(url_for('index'))
 
     def get_card(id):
@@ -155,10 +155,10 @@ def create_app():
         github_user = requests.get("https://api.github.com/user",headers={"Authorization": "token {0}".format(access_token)}).json()
         user = load_user(github_user["login"])
         if login_user(user):
-            logging.info("User successfully logged in")
+            app.logger.info("User successfully logged in")
             return redirect("/")
         else:
-            return logging.critial("Error logging in")
+            return app.logger.error("Error logging in")
 
     login_manager = LoginManager()
 
