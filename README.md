@@ -48,6 +48,10 @@ The following variable is changed only during testing. This is to prevent the 'l
 In order to connect the app to the CosmosDB, the following variable needs to be passed in as an environment variable. This can be found through CLI or through the Azure Portal.
 * `MONGODB_CONNECTION_STRING`
 
+[Loggly](https://www.loggly.com/) is the log management service that will be used. For Loggly to access to the logs, a loggly token is required.
+* `LOG_LEVEL=DEBUG`
+* `LOGGLY_TOKEN`
+
 ## Running the App
 
 ### With Poetry and Flask
@@ -55,6 +59,10 @@ In order to connect the app to the CosmosDB, the following variable needs to be 
 Once the all dependencies have been installed, start the Flask app in development mode within the poetry environment by running:
 ```bash
 $ poetry run flask run
+```
+If there is an error saying "address already in use", first runn the the following command then poetry:
+```bash
+$ kill -9 $(lsof -t -i:"5000")  
 ```
 
 You should see output similar to the following:
