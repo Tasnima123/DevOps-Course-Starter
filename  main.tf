@@ -70,6 +70,8 @@ resource "azurerm_app_service" "main" {
         "FLASK_APP"="todo_app/app"
         "FLASK_ENV"="development"
         "FLASK_SKIP_DOTENV"="True"
+        "LOGGLY_TOKEN"= var.LOGGLY_TOKEN
+        "LOG_LEVEL"="DEBUG"
     }
 }
 

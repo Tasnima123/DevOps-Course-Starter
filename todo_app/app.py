@@ -12,6 +12,9 @@ from todo_app.flask_config import Config
 from todo_app.classModels import Item, ViewModel, User
 import pymongo
 from werkzeug.exceptions import Forbidden
+import logging
+from loggly.handlers import HTTPSHandler
+from logging import Formatter
 
 client_id = os.getenv("client_id")
 client_secret = os.getenv("client_secret")
@@ -23,13 +26,19 @@ def create_app():
     app.config.from_object(Config)
     sess = Session()
     app.secret_key = os.getenv("SECRET_KEY")
+    app.logger.setLevel(app.config['LOG_LEVEL'])
     app.config['SESSION_TYPE'] = 'filesystem'
     sess.init_app(app)
+    if app.config['LOGGLY_TOKEN'] is not None:
+        handler = HTTPSHandler(f'https://logs-01.loggly.com/inputs/{app.config["LOGGLY_TOKEN"]}/tag/todo-app')
+        handler.setFormatter(Formatter("[%(asctime)s] %(levelname)s in %(module)s: %(message)s"))
+        app.logger.addHandler(handler)
     collection=os.getenv("MONGO_COLLECTION")
     mongo_val = pymongo.MongoClient(os.getenv("MONGODB_CONNECTION_STRING"))
     try:
         db_name = mongo_val.get_database()
     except pymongo.errors.ConfigurationError:
+        logging.warning('No default database. Using project_exercise database')
         db_name = mongo_val.get_database("project_exercise")
     collections = db_name.list_collection_names()
     if collection not in collections:
@@ -45,6 +54,7 @@ def create_app():
             if 'writer' in current_user.roles:
                 return func(*args, **kwargs)
             else:
+                logging.error('User does not have writer role enabled')
                 raise Forbidden("Writer role required")
         wrapper_function.__name__ = func.__name__
         return wrapper_function
@@ -74,6 +84,7 @@ def create_app():
             item["title"]=request.form.get('itemTitle')
             item["status"]=request.form.get('itemStatus')
             save_card(item)
+            logging.info("%s has been edited", request.form.get('itemTitle'))
             return redirect(url_for('get', id = item["id"]))
         return render_template('edit.html', item = item)
 
@@ -83,6 +94,7 @@ def create_app():
     def add():
         title = request.form.get('itemTitle')
         add_card(title)
+        logging.info("%s has been added", request.form.get('itemTitle'))
         return redirect(url_for('index'))
 
     def get_card(id):
@@ -143,9 +155,10 @@ def create_app():
         github_user = requests.get("https://api.github.com/user",headers={"Authorization": "token {0}".format(access_token)}).json()
         user = load_user(github_user["login"])
         if login_user(user):
+            logging.info("User successfully logged in")
             return redirect("/")
         else:
-            return "Error logging in."   
+            return logging.critial("Error logging in")
 
     login_manager = LoginManager()
 
