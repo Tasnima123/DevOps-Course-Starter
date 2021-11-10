@@ -11,11 +11,7 @@ logs.txt
 
 .vagrant
 
-.terraform.lock.hcl
-
 .terraform/
-
-.terraform.tfstate.lock.info
 
 terraform.tfstate
 
