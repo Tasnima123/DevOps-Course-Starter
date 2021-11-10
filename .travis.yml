@@ -12,7 +12,7 @@ install:
 - terraform init
 script:
 - docker run --env-file .env.test my-test-image tests/int_unit
-- docker run -e FLASK_APP=todo_app/app -e FLASK_ENV=development -e SECRET_KEY=secret_key -e FLASK_SKIP_DOTENV=True -e MONGO_COLLECTION=todos -e client_id -e client_secret -e disable_login=False -e redirect_uri -e MONGODB_CONNECTION_STRING=$MONGODB_CONNECTION_STRING my-test-image tests/e2e
+- docker run -e FLASK_APP=todo_app/app -e FLASK_ENV=development -e SECRET_KEY=secret_key -e FLASK_SKIP_DOTENV=True -e MONGO_COLLECTION=todos -e client_id -e client_secret -e disable_login=False -e redirect_uri -e MONGODB_CONNECTION_STRING my-test-image tests/e2e
 after_sucess:
 - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 - docker build --target production --tag $DOCKER_USERNAME/my-test-image:latest .
