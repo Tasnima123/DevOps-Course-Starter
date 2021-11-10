@@ -12,7 +12,7 @@ install:
 - terraform init
 script:
 - docker run --env-file .env.test my-test-image tests/int_unit
-- docker run -e FLASK_APP=todo_app/app -e FLASK_ENV=development -e SECRET_KEY=secret_key -e FLASK_SKIP_DOTENV=True -e MONGO_COLLECTION=todos -e client_id -e client_secret -e disable_login=False -e redirect_uri -e MONGODB_CONNECTION_STRING my-test-image tests/e2e
+- docker run -e FLASK_APP=todo_app/app -e FLASK_ENV=development -e SECRET_KEY=secret_key -e FLASK_SKIP_DOTENV=True -e MONGO_COLLECTION=todos -e client_id -e client_secret -e disable_login=False -e redirect_uri -e MONGODB_CONNECTION_STRING=$MONGODB_CONNECTION my-test-image tests/e2e
 - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 - docker build --target production --tag $DOCKER_USERNAME/my-test-image:latest .
 - terraform apply -var="location=uksouth" -var="client_id=$client_id" -var="client_secret=$client_secret" -auto-approve
@@ -24,7 +24,6 @@ deploy:
 env:
   global:
   - TF_VERSION=0.14.7
-  - MONGODB_CONNECTION_STRING=$MONGODB_CONNECTION
   - secure: y1nfDSfF3/+vTpk32GC771VY7mcBz84DH7qDlJRzr7TtKSL0/Ya8XhBgmsu5FZ4buwSrzc3Ua3r9t8SyXXC7tCXO4S+eYlIDmq8do9XK0Np+4GNqERuNqY+fq6pDxJHf3SL3n7U/U5L97uJKAOXyCjSDOTlDOTJ9fgf8BZ7nxYCwu+4Xzc5VYN7hNde/GWeAUaiSxPBPnziNBVW+JwJqoafOjMGo1SAFxp4tl16SZLZbpSigF+iTeLF2w80ZNdqgmkiH7SY2Jv8nART7DnkifCTL68PBz95AX3sbUjCHGxU61NS7IJBMxeYbQGbjZIQFJH0c2MqfCsV1Qqc5KicVMkqAvjvIFmpuz1FVWVyfbn+QAUzX9fqvzxK0ViT8Y62Zw4kd7EQwL9VzWXlqNYUAI1uAvEqp0YZLyioFZzd5w5UrYKzf0jNau0duOm/ShN+ggbhZ/LpkogahCuQrwkFPpk4SNevkdvk8yIWZgjnGPATgxD25C2wGStH+es7jwxfrT1oQSGvPmIVkkMq7HdZ56KB/uvSJK28zwLFmYgvzZK28zlST5W0Fhhs6CDNG57GvqE0obTtDE83bLfxYw++lKnzOvgMiJboJM4YdZj9gDr4smjpoEDwOXh6po4Nu4+uLKOsf6R8A0bQtFjBrWVGN93abJV/U+SyDlcSvIVSxuAQ=
   - secure: SqWtfkrApujjHus5KaHOxfd+eI7ek6pp/BkzTy+ezkf6JKn0VrCa3+S4mf0FvdPu7rhh6jgSD4VY8n4ondGHFmWhh7vkor13kt926xkajHkvPyp7CLev4oZ0Xd9/pR1ftVOHe5/+E+GFBcldLITm0tud8/XSSWEBNHIbMbasNNwvSQLFIRUBDE5dqoPCE9YIQ7WVmMP9L0Gk2/U0wzxdIpUbItrYrc0bpbaNJioLFrW9S5FsMQ8IiKzFMj72ienm9Oj48itOkji5oZpiaHAQevcL+0trLdwDQH0O8aosMT/J/yPMXmoe+3raVfyH/qxscrLTx24JPnyYmz9DEcbABske4sA6rXCHowRK8L4qHRytkikKSNLvQFO915Z8NuVc5D1bK41Zkyt2w0Y4Wca7sCvDx3/Kpkn7zDpc2DhiALe+ABZscx5NPiu+Nu4oBxX9c9lQM6RhRKeMFw7ex0yQihDldYDZCu2aEs102roF7uNrN1NF+z/LxfhIDkqqM9G8aumKd70zklh3dAqAvjO821OMQq3RlqlJ9hB8569VvGJ98wC2GL1XMcQLQo6J2OiboIOiRX8sEaPrmQ6lp/MQ/PRtKTsYX7xJV+/BXUbFOBVQ7mDkHJfv/FMtWENvl/Q/f6OXV4B5SWMXSbVML5Dw3UsfTlhul57bMJoq+9Tx4so=
   - secure: wSyI3cByvxEsmpr2GReyF6WyXdAS4LGZONUQrhFJk8Q7+vdgtYIcaCqt57oIsOnRjb3SPvnvgY1fjgixuLqTPqcgUd7PDnuXrXn8qVv0MsVEEJOH1Fqj0Ya82Qk7dj93rhciIzRzXgSPTbfB0Qx20osmcU70OMpdsbmft30MIM7B2phCmeePFnC3ekPX1ktQ2qTTKNYk7umL430JOGrTaEqhRZ3j9F3z8cdwM50MQNx2HPiQCRF0QoSy8Vtu0+23EqF8bWeRSpWooYIAmZajE3jv9u+CCho5la636R7uK02ABcWskfYNcr3xc0Ls9lyaj6TYil4Lhb7iNLWkiwdEEZ96/yC5Kbz20+++8Qplak2VfFmDq6IpIH4WBJ2n9Vr2QJvVr2/2zsKd63mxvvtZIQyo/uDLGxUyh2ssITv9hln3KUGLrEm9yLX7oR4RMN6jyY2lXpCmZZhxTQ6PuTm3ANTmlnIJSO95T0T+rTKwgGr/2smFWAYnQ3ww7UKKLypm0RV6eLdXqEmpXdyvheQcTuNOgeiJkk17/Miv/qd0LvmdSv0Cj32e7YRjTaURjebJZy9M/zGuQJG1UFm2luF/B/oFygE6IuBck6XOaYp2uYxHAXBTWcvd6hZGDdDgZ8PtBiCNggzBNMP15PG1I1cbdcjSxX8zbba2N0dAnuvqd/I=
