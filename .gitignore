@@ -132,5 +132,3 @@ flask_session/
 terraform.tfstate
 
 terraform.tfstate.backup
-
-.terraform.lock.hcl

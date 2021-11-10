@@ -1,3 +1,3 @@
 #!/bin/bash
 docker push $DOCKER_USERNAME/my-test-image:latest
-curl -dH -X POST "$(terraform output -raw cd_webhook)" 
+terraform output -raw cd_webhook
