@@ -32,7 +32,7 @@ def create_app():
         db_name = mongo_val.get_database()
     except pymongo.errors.ConfigurationError:
         db_name = mongo_val.get_database("project_exercise")
-    app.logger.info('database name %s', db_name)
+    app.logger.info('db name %s', db_name)
     collections = db_name.list_collection_names()
     if collection not in collections:
         todos = db_name[collection]
