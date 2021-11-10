@@ -12,6 +12,7 @@ from todo_app.flask_config import Config
 from todo_app.classModels import Item, ViewModel, User
 import pymongo
 from werkzeug.exceptions import Forbidden
+import logging
 
 client_id = os.getenv("client_id")
 client_secret = os.getenv("client_secret")
@@ -31,6 +32,7 @@ def create_app():
         db_name = mongo_val.get_database()
     except pymongo.errors.ConfigurationError:
         db_name = mongo_val.get_database("project_exercise")
+    app.logger.info('database name %s', db_name)
     collections = db_name.list_collection_names()
     if collection not in collections:
         todos = db_name[collection]
