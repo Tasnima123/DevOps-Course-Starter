@@ -48,9 +48,11 @@ The following variable is changed only during testing. This is to prevent the 'l
 In order to connect the app to the CosmosDB, the following variable needs to be passed in as an environment variable. This can be found through CLI or through the Azure Portal.
 * `MONGODB_CONNECTION_STRING`
 
-[Loggly](https://www.loggly.com/) is the log management service that will be used. For Loggly to access to the logs, a loggly token is required.
-* `LOG_LEVEL=DEBUG`
+By default, when running locally, Flask logs everything at DEBUG level and above. This is because it's running in the development profile. When running in production, it will only log ERROR and above. We'd like to make this configurable. So a variable is added to the app config called LOG_LEVEL and this can be altered in .env.
 * `LOGGLY_TOKEN`
+
+[Loggly](https://www.loggly.com/) is the log management service that will be used. For Loggly to access the logs, a loggly token is required.
+* `LOG_LEVEL=DEBUG`
 
 ## Running the App
 
