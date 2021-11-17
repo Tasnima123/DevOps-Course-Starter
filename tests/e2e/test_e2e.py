@@ -6,15 +6,20 @@ from dotenv import load_dotenv
 import time
 import os
 import pymongo
+import logging
 
 @pytest.fixture(scope='module')
 def test_app():
     load_dotenv('.env', override=True)
-    connection = create_collection()
+    connection_string=os.getenv("MONGODB_CONNECTION_STRING")
+    connection=pymongo.MongoClient(connection_string)
+    new_collection = 'testCollection'
+    os.environ["MONGO_COLLECTION"]=new_collection
     try:
         database = connection.get_database()
     except pymongo.errors.ConfigurationError:
         database = connection.get_database("project_exercise")
+    logging.info('db name %s', database)
     os.environ["disable_login"]='True'
     application = app.create_app()
     thread = Thread(target=lambda: application.run(use_reloader=False))
@@ -76,13 +81,6 @@ def test_moveDone(test_app,driver):
     value = driver.find_element_by_id("Done_list")
     time.sleep(2)
     assert "Selenium_test" in value.text
-
-def create_collection():
-    connection_string=os.getenv("MONGODB_CONNECTION_STRING")
-    connection=pymongo.MongoClient(connection_string)
-    new_collection = 'testCollection'
-    os.environ["MONGO_COLLECTION"]=new_collection
-    return connection
 
 
 

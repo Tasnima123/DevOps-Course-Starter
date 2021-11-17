@@ -40,6 +40,7 @@ def create_app():
     except pymongo.errors.ConfigurationError:
         logging.warning('No default database. Using project_exercise database')
         db_name = mongo_val.get_database("project_exercise")
+    app.logger.info('db name %s', db_name)
     collections = db_name.list_collection_names()
     if collection not in collections:
         todos = db_name[collection]
