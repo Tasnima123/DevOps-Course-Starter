@@ -10,3 +10,8 @@ variable "client_id" {
 variable "client_secret" {
     description = "The Github client secret for app to be deployed on Azure"
 }
+
+variable "LOGGLY_TOKEN" {
+    description = "Token to send logs to Loggly"
+}
+
