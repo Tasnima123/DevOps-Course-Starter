@@ -52,7 +52,7 @@ By default, when running locally, Flask logs everything at DEBUG level and above
 * `LOGGLY_TOKEN`
 
 [Loggly](https://www.loggly.com/) is the log management service that will be used. For Loggly to access the logs, a loggly token is required.
-* `LOG_LEVEL=DEBUG`
+* `LOG_LEVEL=INFO`
 
 ## Running the App
 
