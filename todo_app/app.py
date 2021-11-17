@@ -1,6 +1,6 @@
 from bson.objectid import ObjectId
 from flask import Flask, redirect, url_for, render_template, request
-from flask_login import LoginManager,login_required, login_user, current_user, logout_user
+from flask_login import LoginManager,login_required, login_user, current_user
 from oauthlib.oauth2 import WebApplicationClient
 from flask_session import Session
 import os
@@ -12,16 +12,12 @@ from todo_app.flask_config import Config
 from todo_app.classModels import Item, ViewModel, User
 import pymongo
 from werkzeug.exceptions import Forbidden
+import logging
 
 client_id = os.getenv("client_id")
 client_secret = os.getenv("client_secret")
 redirect_uri_value = os.getenv("redirect_uri")
 client = WebApplicationClient(client_id)
-
-def mongo_connection(protocol,username,password,url,database):
-    if os.getenv("CONNECTION_STRING"):
-        return pymongo.MongoClient(os.getenv("CONNECTION_STRING"))
-    return pymongo.MongoClient("{0}{1}:{2}@{3}/{4}?retryWrites=true&w=majority".format(protocol,username,password,url,database))
 
 def create_app():
     app = Flask(__name__)
@@ -30,17 +26,17 @@ def create_app():
     app.secret_key = os.getenv("SECRET_KEY")
     app.config['SESSION_TYPE'] = 'filesystem'
     sess.init_app(app)
-    username=os.getenv("MONGO_USER")
-    password=os.getenv("MONGO_PASSWORD")
-    url=os.getenv("MONGO_URL")
-    database=os.getenv("MONGO_DB")
-    protocol=os.getenv("MONGO_PROTOCOL")
     collection=os.getenv("MONGO_COLLECTION")
-    mongo = mongo_connection(protocol,username,password,url,database)
-    collections = mongo.MyDatabase.list_collection_names()
+    mongo_val = pymongo.MongoClient(os.getenv("MONGODB_CONNECTION_STRING"))
+    try:
+        db_name = mongo_val.get_database()
+    except pymongo.errors.ConfigurationError:
+        db_name = mongo_val.get_database("project_exercise")
+    app.logger.info('db name %s', db_name)
+    collections = db_name.list_collection_names()
     if collection not in collections:
-        todos = mongo.MyDatabase[collection]
-    todos = mongo.MyDatabase[collection]
+        todos = db_name[collection]
+    todos = db_name[collection]
     _DEFAULT_ITEMS = []
     itemDict = []
     if os.getenv("disable_login")=='True':
