@@ -49,10 +49,10 @@ In order to connect the app to the CosmosDB, the following variable needs to be 
 * `MONGODB_CONNECTION_STRING`
 
 By default, when running locally, Flask logs everything at DEBUG level and above. This is because it's running in the development profile. When running in production, it will only log ERROR and above. We'd like to make this configurable. So a variable is added to the app config called LOG_LEVEL and this can be altered in .env.
-* `LOGGLY_TOKEN`
+* `LOG_LEVEL=INFO`
 
 [Loggly](https://www.loggly.com/) is the log management service that will be used. For Loggly to access the logs, a loggly token is required.
-* `LOG_LEVEL=INFO`
+* `LOGGLY_TOKEN`
 
 ## Running the App
 
