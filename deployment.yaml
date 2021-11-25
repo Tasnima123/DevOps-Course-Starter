@@ -15,6 +15,50 @@ spec:
     spec:
       containers:
         - name: nginx
-          image: nginx
+          image: todo-app:prod
+          imagePullPolicy: Never
           ports:
-          - containerPort: 80
+          - containerPort: 5000
+          env:
+          - name: disable_login
+            value: "False" 
+          - name: LOG_LEVEL
+            value: "INFO"   
+          - name: FLASK_APP
+            value: "todo_app/app"
+          - name: FLASK_ENV
+            value: "development"
+          - name: FLASK_SKIP_DOTENV
+            value: "True"
+          - name: MONGO_COLLECTION
+            value: "todos"
+          - name: client_id
+            valueFrom:
+              secretKeyRef:
+                name: test-secret
+                key: client_id
+          - name: client_secret
+            valueFrom:
+              secretKeyRef:
+                name: test-secret
+                key: client_secret
+          - name: MONGODB_CONNECTION_STRING
+            valueFrom:
+              secretKeyRef:
+                name: test-secret
+                key: MONGODB_CONNECTION_STRING
+          - name: LOGGLY_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: test-secret
+                key: LOGGLY_TOKEN
+          - name: SECRET_KEY
+            valueFrom:
+              secretKeyRef:
+                name: test-secret
+                key: SECRET_KEY 
+          - name: redirect_uri
+            valueFrom:
+              secretKeyRef:
+                name: test-secret
+                key: redirect_uri 
