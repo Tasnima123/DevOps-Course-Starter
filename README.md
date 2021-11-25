@@ -88,7 +88,7 @@ Download:
 
 ### Starting the app on Minikube
 
-* `minikube start ` - run this in an admin terminal to spin up the minikube cluster.
+* `minikube start` - run this in an admin terminal to spin up the minikube cluster.
 * `kubectl apply -f deployment.yaml` -  deploy a Pod running the docker image.
 * `kubectl apply -f service.yaml ` - deploy the Service.
 * `kubectl port-forward service/module-14 5000:5000` - link up our minikube Service with a port on localhost.
