@@ -77,6 +77,23 @@ You should see output similar to the following:
 ```
 Now visit [`http://localhost:5000/`](http://localhost:5000/) in your web browser to view the app.
 
+### Minikube
+
+Minikube is a version of Kubernetes that you can run locally on a development machine. It can be a great way to learn about Kubernetes and test changes locally without having to set up and pay for hosting.
+
+Download:
+* [Docker](https://docs.docker.com/get-docker/)
+* [Kubectl](https://kubernetes.io/docs/tasks/tools/)
+* [minikube](https://minikube.sigs.k8s.io/docs/start/)
+
+### Starting the app on Minikube
+
+* `minikube start ` - run this in an admin terminal to spin up the minikube cluster.
+* `kubectl apply -f deployment.yaml` -  deploy a Pod running the docker image.
+* `kubectl apply -f service.yaml ` - deploy the Service.
+* `kubectl port-forward service/module-14 5000:5000` - link up our minikube Service with a port on localhost.
+
+You can then visit http://localhost:5000/ in your web browser to view the app.
 
 ### Virtual Machine(VM) using Vagrant
 
