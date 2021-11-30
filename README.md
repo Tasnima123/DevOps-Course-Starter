@@ -54,6 +54,31 @@ By default, when running locally, Flask logs everything at DEBUG level and above
 [Loggly](https://www.loggly.com/) is the log management service that will be used. For Loggly to access the logs, a loggly token is required.
 * `LOGGLY_TOKEN`
 
+## Secrets
+
+Since we have sensitive information, the following variable need to be stored as Secrets:
+* `LOGGLY_TOKEN`
+* `SECRET_KEY`
+* `MONGODB_CONNECTION_STRING`
+* `GITHUB_CLIENT_ID`
+* `GITHUB_CLIENT_SECRET`
+
+Run the following Command with the values as arguments:
+
+```bash
+$ kubectl create secret generic test-secret --from-literal='GITHUB_CLIENT_ID=<GITHUB_CLIENT_ID>' --from-literal='GITHUB_CLIENT_SECRET=GITHUB_CLIENT_SECRET' --from-literal='MONGODB_CONNECTION_STRING=<MONGODB_CONNECTION_STRING>' --from-literal='SECRET_KEY=<SECRET_KEY>' --from-literal='LOGGLY_TOKEN=<LOGGLY_TOKEN>'
+```
+
+These values can then be referenced in deployment.yaml under `env` in `spec` using the following format:
+
+```
+name: GITHUB_CLIENT_ID
+    valueFrom:
+        secretKeyRef:
+            name: test-secret
+            key: GITHUB_CLIENT_ID
+```
+
 ## Running the App
 
 ### With Poetry and Flask
@@ -79,6 +104,25 @@ You should see output similar to the following:
 ```
 Now visit [`http://localhost:5000/`](http://localhost:5000/) in your web browser to view the app.
 
+### Minikube
+
+Minikube is a version of Kubernetes that you can run locally on a development machine. It can be a great way to learn about Kubernetes and test changes locally without having to set up and pay for hosting.
+
+Download:
+* [Docker](https://docs.docker.com/get-docker/)
+* [Kubectl](https://kubernetes.io/docs/tasks/tools/)
+* [minikube](https://minikube.sigs.k8s.io/docs/start/)
+
+### Starting the app on Minikube
+
+* `minikube start` - run this in an admin terminal to spin up the minikube cluster.
+* `docker build --target production --tag todo-app:prod .` - create a Docker image for the Pod.
+* `minikube image load todo-app:prod` - load in the docker image.
+* `kubectl apply -f deployment.yaml` -  deploy a Pod running the docker image.
+* `kubectl apply -f service.yaml ` - deploy the Service.
+* `kubectl port-forward service/module-14 5000:5000` - link up our minikube Service with a port on localhost.
+
+You can then visit http://localhost:5000/ in your web browser to view the app.
 
 ### Virtual Machine(VM) using Vagrant
 

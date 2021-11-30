@@ -1,0 +1,64 @@
+# deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: module-14
+spec:
+  selector:
+    matchLabels:
+      app: module-14
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: module-14
+    spec:
+      containers:
+        - name: todo-app
+          image: todo-app:prod
+          imagePullPolicy: Never
+          ports:
+          - containerPort: 5000
+          env:
+          - name: disable_login
+            value: "False" 
+          - name: LOG_LEVEL
+            value: "INFO"   
+          - name: FLASK_APP
+            value: "todo_app/app"
+          - name: FLASK_ENV
+            value: "development"
+          - name: FLASK_SKIP_DOTENV
+            value: "True"
+          - name: MONGO_COLLECTION
+            value: "todos"
+          - name: client_id
+            valueFrom:
+              secretKeyRef:
+                name: test-secret
+                key: client_id
+          - name: client_secret
+            valueFrom:
+              secretKeyRef:
+                name: test-secret
+                key: client_secret
+          - name: MONGODB_CONNECTION_STRING
+            valueFrom:
+              secretKeyRef:
+                name: test-secret
+                key: MONGODB_CONNECTION_STRING
+          - name: LOGGLY_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: test-secret
+                key: LOGGLY_TOKEN
+          - name: SECRET_KEY
+            valueFrom:
+              secretKeyRef:
+                name: test-secret
+                key: SECRET_KEY 
+          - name: redirect_uri
+            valueFrom:
+              secretKeyRef:
+                name: test-secret
+                key: redirect_uri 

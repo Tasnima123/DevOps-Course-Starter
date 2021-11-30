@@ -174,7 +174,6 @@ def create_app():
         return User(user_id)
 
     login_manager.init_app(app)
-
     return app
 
 if __name__ == '__main__':
